@@ -1,16 +1,31 @@
-
+#include <memory>
 namespace ft
 {
-	template <typename T>
-    // Only declaring class here
-    class vector;
+	template<
+    class T,
+    class Allocator = std::allocator<T>
+> class vector;
 }
   
 // Defining class outside
-template <typename T>
+template<
+    class T,
+    class Allocator
+>
 class ft::vector
 {
 public:
+	// Attributes
+	typedef T						value_type;
+	typedef Allocator				allocator_type;
+	typedef T*						pointer;
+	typedef const T*				const_pointer;
+	typedef T&						reference;
+	typedef const T&				const_reference;
+	typedef std::size_t				size_type;
+	typedef std::ptrdiff_t			difference_type;
+
+
 	vector() : m_Data(nullptr), m_Size(0), m_Capacity(0)
 	{
 		ReAlloc(2);
@@ -18,12 +33,10 @@ public:
 	~vector()
 	{
 		clear();
-		::operator delete(m_Data);
-		//::operator delete(m_Data, m_Capacity * sizeof(T));
-		//delete[] m_Data;
+		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 	}
 
-	void puch_back(const T& value)
+	void puch_back(const_reference value)
 	{
 		if (m_Size >= m_Capacity)
 			ReAlloc(m_Capacity + m_Capacity / 2);
@@ -42,13 +55,14 @@ public:
 
 	void clear()
 	{
-		for (size_t i = 0; i < m_Size; i++)
+		for (size_type i = 0; i < m_Size; i++)
 		{
 			m_Data[i].~T();
 		}
 		m_Size = 0;
 	}
-	const T& operator[](size_t index) const
+
+	const_reference operator[](size_type index) const
 	{
 		if (index >= m_Size)
 		{
@@ -57,7 +71,7 @@ public:
 		return m_Data[index];
 	}
 
-	T& operator[](size_t index)
+	reference operator[](size_type index)
 	{
 		if (index >= m_Size)
 		{
@@ -66,39 +80,39 @@ public:
 		return m_Data[index];
 	}
 
-	size_t Size() const
+	size_type Size() const
 	{
 		return (m_Size);
 	}
 
 
 private:
-	T* m_Data;
-	size_t m_Size; // nbr of element inside the vector, keep track of how many element we have
-	size_t m_Capacity; //how much memory we have allocated
 
-	void ReAlloc(size_t newCapacity)
+	pointer			m_Data;
+	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
+	size_type		m_Capacity; //how much memory we have allocated
+	allocator_type	m_Allocator;
+
+	void ReAlloc(size_type newCapacity)
 	{
 		// 1. allocate a new block of memory
 		// 2. copy/move old elements into new block
 		// 3. delete
 
-		//T* newBlock = new T[newCapacity];
-		T* newBlock = (T*)::operator new (newCapacity * sizeof(T));
+		pointer newBlock = m_Allocator.allocate(newCapacity * sizeof(value_type));
+		
 		if (newCapacity < m_Size)
 			m_Size = newCapacity;
 
-		for (size_t i = 0; i < m_Size; i++)
+		for (size_type i = 0; i < m_Size; i++)
 			newBlock[i] = m_Data[i];
 
-		for (size_t i = 0; i < m_Size; i++)
+		for (size_type i = 0; i < m_Size; i++)
 		{
 			m_Data[i].~T();
 		}
 
-		//delete[] m_Data;
-		//::operator delete (m_Data, m_Capacity * sizeof(T));
-		::operator delete(m_Data);
+		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 		m_Data = newBlock;
 		m_Capacity = newCapacity;
 	}

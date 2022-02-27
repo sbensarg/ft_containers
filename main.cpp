@@ -19,14 +19,14 @@ int main()
 	print_vector(vec);
 	vec.pop_back();
 	print_vector(vec);
-	vec.puch_back("test2");
-	vec.puch_back("test3");
-	print_vector(vec);
-	vec.clear();
-	print_vector(vec);
-	vec.puch_back("test4");
-	vec.puch_back("test5");
-	print_vector(vec);
+	//vec.puch_back("test2");
+	// vec.puch_back("test3");
+	// print_vector(vec);
+	// vec.clear();
+	// print_vector(vec);
+	// vec.puch_back("test4");
+	// vec.puch_back("test5");
+	// print_vector(vec);
 
     return 0;
 }
