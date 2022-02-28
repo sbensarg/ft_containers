@@ -44,6 +44,7 @@ public:
 		m_Data[m_Size] = value;
 		m_Size++;
 	}
+
 	void pop_back()
 	{
 		if (m_Size > 0)
@@ -86,8 +87,8 @@ public:
 	}
 
 
-private:
-
+// private:
+public :
 	pointer			m_Data;
 	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
 	size_type		m_Capacity; //how much memory we have allocated
@@ -117,4 +118,4 @@ private:
 		m_Capacity = newCapacity;
 	}
 
-};
+}
