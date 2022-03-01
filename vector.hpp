@@ -1,4 +1,5 @@
 #include <memory>
+#include "RandomAccessIterator.hpp"
 namespace ft
 {
 	template<
@@ -16,14 +17,15 @@ class ft::vector
 {
 public:
 	// Attributes
-	typedef T						value_type;
-	typedef Allocator				allocator_type;
-	typedef T*						pointer;
-	typedef const T*				const_pointer;
-	typedef T&						reference;
-	typedef const T&				const_reference;
-	typedef std::size_t				size_type;
-	typedef std::ptrdiff_t			difference_type;
+	typedef T								value_type;
+	typedef Allocator						allocator_type;
+	typedef T*								pointer;
+	typedef const T*						const_pointer;
+	typedef T&								reference;
+	typedef const T&						const_reference;
+	typedef std::size_t						size_type;
+	typedef std::ptrdiff_t					difference_type;
+	typedef RandomAccessIterator<T> 		iterator;
 
 
 	vector() : m_Data(nullptr), m_Size(0), m_Capacity(0)
@@ -86,9 +88,12 @@ public:
 		return (m_Size);
 	}
 
+	iterator begin()
+	{
+		return iterator(m_Data);
+	}
 
-// private:
-public :
+ private:
 	pointer			m_Data;
 	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
 	size_type		m_Capacity; //how much memory we have allocated
@@ -118,4 +123,4 @@ public :
 		m_Capacity = newCapacity;
 	}
 
-}
+};

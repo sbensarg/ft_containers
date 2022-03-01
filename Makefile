@@ -2,7 +2,7 @@ NAME = vector
 SRCS = main.cpp
 FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 CC = c++
-HEADER = vector.hpp iterators_traits.hpp
+HEADER = vector.hpp 
 all: $(NAME)
 
 $(NAME): $(SRCS) $(HEADER)

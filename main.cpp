@@ -6,7 +6,6 @@
 #include <iterator>     // std::iterator_traits
 #include <typeinfo>     // typeid
 
-#include "iterators_traits.hpp"
 
 template <typename T>
 void print_vector(const ft::vector<T>& vector)
@@ -41,13 +40,30 @@ int main()
 	// print_vector(vec);
 
 	//test iterator_traits
-	typedef std::iterator_traits<int*> traits;
-  	if (typeid(traits::iterator_category)==typeid(std::random_access_iterator_tag))
-    	std::cout << "int* is a random-access iterator\n";
+	// typedef std::iterator_traits<int*> traits;
+  	// if (typeid(traits::iterator_category)==typeid(std::random_access_iterator_tag))
+    // 	std::cout << "int* is a random-access iterator\n";
 	
-	typedef ft::iterator_traits<int*> my_traits;
-  	if (typeid(my_traits::iterator_category)==typeid(std::random_access_iterator_tag))
-    	std::cout << "int* is My random-access iterator";	
+	// typedef ft::iterator_traits<int*> my_traits;
+  	// if (typeid(my_traits::iterator_category)==typeid(std::random_access_iterator_tag))
+    // 	std::cout << "int* is My random-access iterator";	
 
+	// test random access iterator 
+	ft::vector<int> vect;
+	vect.puch_back(10);
+	vect.puch_back(11);
+	vect.puch_back(43);
+	vect.puch_back(66);
+	vect.puch_back(90);
+	ft::vector<int>::iterator it = vect.begin();
+	std::cout << *it <<"\n";
+	std::cout << it[0] <<"\n";
+
+	ft::vector<int>::iterator ret = it + 3;
+
+   	std::cout << *ret << "\n";
+    std::cout << *it << "\n";
+   //---------------
+   	
     return 0;
 }
