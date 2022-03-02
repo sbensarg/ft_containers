@@ -5,10 +5,6 @@ template <typename T>
 
 class RandomAccessIterator
 {
-private:
-
-	T* _ptr;
-
 public:
 	typedef typename ft::iterator_traits<T*>::reference 		reference;
 	typedef typename ft::iterator_traits<T*>::pointer			pointer;
@@ -128,19 +124,20 @@ public:
 		a - n
 		a - b
 	*/
-	RandomAccessIterator operator+(const difference_type & other) const
+	RandomAccessIterator operator+(const difference_type & other) const // a + n
 	{
 		return RandomAccessIterator(_ptr + other);
 	}
-	RandomAccessIterator operator+(const RandomAccessIterator & other) const
+	friend RandomAccessIterator operator+(const difference_type & n, const RandomAccessIterator & it) // n + a
 	{
-		return RandomAccessIterator(_ptr + other._ptr);
+			return RandomAccessIterator(n + it._ptr);
 	}
-	RandomAccessIterator operator-(const difference_type & other) const
+	
+	RandomAccessIterator operator-(const difference_type & other) const // a - n
 	{
 		return RandomAccessIterator(_ptr - other);
 	}
-	difference_type operator-(const RandomAccessIterator & it) const
+	difference_type operator-(const RandomAccessIterator & it) const // a - b
 	{
 		return (_ptr - it._ptr);
 	}
@@ -173,7 +170,6 @@ public:
 		a += n
 		a -= n
 	*/
-
 	RandomAccessIterator & operator+=(const difference_type & n)
 	{
 		_ptr += n;
@@ -192,4 +188,8 @@ public:
 	{
 		return (_ptr[n]);
 	}
+private:
+
+		T* _ptr;
+		
 };
