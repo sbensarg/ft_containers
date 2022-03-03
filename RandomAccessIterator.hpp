@@ -1,14 +1,17 @@
 
 #include <iostream>
 #include "iterators_traits.hpp"
+#pragma once
 template <typename T>
 
 class RandomAccessIterator
 {
 public:
+	typedef typename ft::iterator_traits<T*>::value_type 		value_type;
 	typedef typename ft::iterator_traits<T*>::reference 		reference;
 	typedef typename ft::iterator_traits<T*>::pointer			pointer;
 	typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
+	typedef typename ft::iterator_traits<T*>::iterator_category	iterator_category;
 
 	/*
 		Is default-constructible, copy-constructible, copy-assignable and destructible

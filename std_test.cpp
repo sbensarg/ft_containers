@@ -183,4 +183,26 @@ int main()
 		std::cout << "ret ==> " << *ret << "\n";
 
 	}
+
+	{
+		//test constuction reverse iterator
+		std::cout << "test constuction reverse iterator" << std::endl;
+		std::vector<int> myvector;
+		for (int i=0; i<10; i++) myvector.push_back(i);
+
+		typedef std::vector<int>::iterator iter_type;
+																// ? 0 1 2 3 4 5 6 7 8 9 ?
+		iter_type from (myvector.begin());                     //   ^
+																//         ------>
+		iter_type until (myvector.end());                      //                       ^
+																//
+		std::reverse_iterator<iter_type> rev_until (from);     // ^
+																//         <------
+		std::reverse_iterator<iter_type> rev_from (until);     //                     ^
+
+		std::cout << "myvector:";
+		while (rev_from != rev_until)
+			std::cout << ' ' << *rev_from++;
+		std::cout << '\n';
+	}
 }

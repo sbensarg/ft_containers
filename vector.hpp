@@ -1,5 +1,7 @@
 #include <memory>
 #include "RandomAccessIterator.hpp"
+#include "ReverseIterator.hpp"
+#pragma once
 namespace ft
 {
 	template<
@@ -26,6 +28,7 @@ public:
 	typedef std::size_t						size_type;
 	typedef std::ptrdiff_t					difference_type;
 	typedef RandomAccessIterator<T> 		iterator;
+	typedef ft::reverse_iterator<iterator>		reverse_iterator;
 
 
 	vector() : m_Data(nullptr), m_Size(0), m_Capacity(0)
@@ -91,6 +94,18 @@ public:
 	iterator begin()
 	{
 		return iterator(m_Data);
+	}
+	iterator end()
+	{
+		return iterator(m_Data + m_Size);
+	}
+	reverse_iterator rbegin()
+	{
+		return reverse_iterator(end());
+	}
+	reverse_iterator rend()
+	{
+		return reverse_iterator(begin());
 	}
 
  private:
