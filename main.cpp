@@ -19,27 +19,36 @@ void print_vector(const ft::vector<T>& vector)
 
 int main()
 {
-	// {
-	// 	ft::vector<std::string> vec;
-	// 	std::vector<std::string> v;
-	// 	std::cout << v.capacity() << v.size() <<"\n"; 
-	// 	vec.puch_back("chicky");
-	// 	vec.puch_back("akira");
-	// 	vec.puch_back("test");
-	// 	print_vector(vec);
-	// 	// vec.pop_back();
-	// 	// print_vector(vec);
+	{
+		ft::vector<std::string> vec;
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+		vec.push_back("chicky");
+		vec.push_back("akira");
+		vec.push_back("test");
+		print_vector(vec);
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+		vec.pop_back();
+		print_vector(vec);
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
 
 
-	// 	// vec.puch_back("test2");
-	// 	// vec.puch_back("test3");
-	// 	// print_vector(vec);
-	// 	// vec.clear();
-	// 	// print_vector(vec);
-	// 	// vec.puch_back("test4");
-	// 	// vec.puch_back("test5");
-	// 	// print_vector(vec);
-	// }
+		vec.push_back("test2");
+		vec.push_back("test3");
+		print_vector(vec);
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n";  
+		vec.clear();
+		print_vector(vec);
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+		vec.push_back("test4");
+		vec.push_back("test5");
+		vec.push_back("test4");
+		vec.push_back("test5");
+		vec.push_back("test4");
+		vec.push_back("test5");
+		print_vector(vec);
+		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	}
+
 
 	// //test iterator_traits
 	// typedef ft::iterator_traits<int*> my_traits;
@@ -190,127 +199,127 @@ int main()
 	// 	std::cout << "ret -= 1 ==> " << *m << "\n";
 	// 	std::cout << "ret ==> " << *ret << "\n";
 
-	{
-		//test constuction reverse iterator
-		std::cout << "test constuction reverse iterator" << std::endl;
-		ft::vector<int> myvector;
-		myvector.puch_back(43);
-		myvector.puch_back(55);
-		myvector.puch_back(6);
-		print_vector(myvector);
+	// {
+	// 	//test constuction reverse iterator
+	// 	std::cout << "test constuction reverse iterator" << std::endl;
+	// 	ft::vector<int> myvector;
+	// 	myvector.puch_back(43);
+	// 	myvector.puch_back(55);
+	// 	myvector.puch_back(6);
+	// 	print_vector(myvector);
 
-		typedef ft::vector<int>::iterator iter_type;
-																// ? 0 1 2 3 4 5 6 7 8 9 ?
-		iter_type from (myvector.begin());                     	//   ^
-																//         ------>
-		iter_type until (myvector.end());                      	//                       ^
-																//
-		std::reverse_iterator<iter_type> rev_until (from);     	// ^
-																//         <------
-		std::reverse_iterator<iter_type> rev_from (until);     	//                     ^
+	// 	typedef ft::vector<int>::iterator iter_type;
+	// 															// ? 0 1 2 3 4 5 6 7 8 9 ?
+	// 	iter_type from (myvector.begin());                     	//   ^
+	// 															//         ------>
+	// 	iter_type until (myvector.end());                      	//                       ^
+	// 															//
+	// 	std::reverse_iterator<iter_type> rev_until (from);     	// ^
+	// 															//         <------
+	// 	std::reverse_iterator<iter_type> rev_from (until);     	//                     ^
 
-		std::cout << "myvector:";
-		while (rev_from != rev_until)
-			std::cout << ' ' << *rev_from++;
-		std::cout << '\n';
-	}
+	// 	std::cout << "myvector:";
+	// 	while (rev_from != rev_until)
+	// 		std::cout << ' ' << *rev_from++;
+	// 	std::cout << '\n';
+	// }
 
-	{
-		//test base iterator
-		std::cout << "test base iterator" << std::endl;
-		ft::vector<int> myvector;
-		myvector.puch_back(43);
-		myvector.puch_back(55);
-		myvector.puch_back(6);
-		print_vector(myvector);
+	// {
+	// 	//test base iterator
+	// 	std::cout << "test base iterator" << std::endl;
+	// 	ft::vector<int> myvector;
+	// 	myvector.puch_back(43);
+	// 	myvector.puch_back(55);
+	// 	myvector.puch_back(6);
+	// 	print_vector(myvector);
 
-		typedef ft::vector<int>::iterator iter_type;
+	// 	typedef ft::vector<int>::iterator iter_type;
 
-		std::reverse_iterator<iter_type> rev_end (myvector.begin());
-		std::reverse_iterator<iter_type> rev_begin (myvector.end());
+	// 	std::reverse_iterator<iter_type> rev_end (myvector.begin());
+	// 	std::reverse_iterator<iter_type> rev_begin (myvector.end());
 
-		std::cout << "myvector:";
-		for (iter_type it = rev_end.base(); it != rev_begin.base(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	}
+	// 	std::cout << "myvector:";
+	// 	for (iter_type it = rev_end.base(); it != rev_begin.base(); ++it)
+	// 		std::cout << ' ' << *it;
+	// 	std::cout << '\n';
+	// }
 
-	{
-		// test operator +
-		std::cout << "test operator +" << std::endl;
-		ft::vector<int> myvector;
-		myvector.puch_back(43);
-		myvector.puch_back(55);
-		myvector.puch_back(6);
-		myvector.puch_back(77);
-		myvector.puch_back(32);
-		print_vector(myvector);
+	// {
+	// 	// test operator +
+	// 	std::cout << "test operator +" << std::endl;
+	// 	ft::vector<int> myvector;
+	// 	myvector.puch_back(43);
+	// 	myvector.puch_back(55);
+	// 	myvector.puch_back(6);
+	// 	myvector.puch_back(77);
+	// 	myvector.puch_back(32);
+	// 	print_vector(myvector);
 
-		typedef ft::vector<int>::iterator iter_type;
+	// 	typedef ft::vector<int>::iterator iter_type;
 		
-		ft::reverse_iterator<iter_type> rev_it;
+	// 	ft::reverse_iterator<iter_type> rev_it;
 		
-		rev_it = myvector.rbegin() +3;
+	// 	rev_it = myvector.rbegin() +3;
 
-  		std::cout << "The fourth element from the end is: " << *rev_it << '\n';
-		// test operator ++
-		iter_type from (myvector.begin());                     //   ^
-                                                         //         ------>
-		iter_type until (myvector.end()); 
-		ft::reverse_iterator<iter_type> rev_until (from);     // ^
-                                                         //         <------
-		ft::reverse_iterator<iter_type> rev_from (until); 
-		while (rev_from != rev_until)
-		{
-    		std::cout << ' ' << *rev_from;
-			++rev_from;
-		}
-		std::cout << "\n";
-		// reverse_iterator::operator+= example
-		ft::reverse_iterator<iter_type> rev_iterator = myvector.rbegin();
+  	// 	std::cout << "The fourth element from the end is: " << *rev_it << '\n';
+	// 	// test operator ++
+	// 	iter_type from (myvector.begin());                     //   ^
+    //                                                      //         ------>
+	// 	iter_type until (myvector.end()); 
+	// 	ft::reverse_iterator<iter_type> rev_until (from);     // ^
+    //                                                      //         <------
+	// 	ft::reverse_iterator<iter_type> rev_from (until); 
+	// 	while (rev_from != rev_until)
+	// 	{
+    // 		std::cout << ' ' << *rev_from;
+	// 		++rev_from;
+	// 	}
+	// 	std::cout << "\n";
+	// 	// reverse_iterator::operator+= example
+	// 	ft::reverse_iterator<iter_type> rev_iterator = myvector.rbegin();
 
-		rev_iterator += 2;
+	// 	rev_iterator += 2;
 
-  		std::cout << "The third element from the end is: " << *rev_iterator << '\n';
-		// reverse_iterator::operator- example
-		rev_iterator = myvector.rend() - 3;
+  	// 	std::cout << "The third element from the end is: " << *rev_iterator << '\n';
+	// 	// reverse_iterator::operator- example
+	// 	rev_iterator = myvector.rend() - 3;
 
-  		std::cout << "myvector.rend()-3 points to: " << *rev_iterator << '\n';
-	}
+  	// 	std::cout << "myvector.rend()-3 points to: " << *rev_iterator << '\n';
+	// }
 
-	{
-		// reverse_iterator::operator-- example
-		std::cout << "// reverse_iterator::operator-- example\n";
-		ft::vector<int> myvector;
-		myvector.puch_back(11);
-		myvector.puch_back(12);
-		myvector.puch_back(13);
-		myvector.puch_back(14);
-		myvector.puch_back(15);
+	// {
+	// 	// reverse_iterator::operator-- example
+	// 	std::cout << "// reverse_iterator::operator-- example\n";
+	// 	ft::vector<int> myvector;
+	// 	myvector.puch_back(11);
+	// 	myvector.puch_back(12);
+	// 	myvector.puch_back(13);
+	// 	myvector.puch_back(14);
+	// 	myvector.puch_back(15);
 
-		typedef ft::vector<int>::iterator iter_type;
+	// 	typedef ft::vector<int>::iterator iter_type;
 
-		ft::reverse_iterator<iter_type> rev_begin (myvector.end());
-		ft::reverse_iterator<iter_type> rev_end (myvector.begin());
+	// 	ft::reverse_iterator<iter_type> rev_begin (myvector.end());
+	// 	ft::reverse_iterator<iter_type> rev_end (myvector.begin());
 
-		ft::reverse_iterator<iter_type> rev_iterator = rev_begin;
-		while ( rev_iterator != rev_end )
-			std::cout << *rev_iterator++ << ' ';
-		std::cout << '\n';
+	// 	ft::reverse_iterator<iter_type> rev_iterator = rev_begin;
+	// 	while ( rev_iterator != rev_end )
+	// 		std::cout << *rev_iterator++ << ' ';
+	// 	std::cout << '\n';
 
-		while ( rev_iterator != rev_begin )
-			std::cout << *(--rev_iterator) << ' ';
-		std::cout << '\n';
-		//test operator -=
-		ft::reverse_iterator<iter_type> rev_iterator1 = myvector.rend();
+	// 	while ( rev_iterator != rev_begin )
+	// 		std::cout << *(--rev_iterator) << ' ';
+	// 	std::cout << '\n';
+	// 	//test operator -=
+	// 	ft::reverse_iterator<iter_type> rev_iterator1 = myvector.rend();
 		
-		rev_iterator1 -= 2;
+	// 	rev_iterator1 -= 2;
 
-  		std::cout << "rev_iterator now points to: " << *rev_iterator1 << '\n';
+  	// 	std::cout << "rev_iterator now points to: " << *rev_iterator1 << '\n';
 		
-		// reverse_iterator::operator[] example
-		std::cout << "The fourth element from the end is: " << rev_iterator[1] << '\n';
-	}
+	// 	// reverse_iterator::operator[] example
+	// 	std::cout << "The fourth element from the end is: " << rev_iterator[1] << '\n';
+	// }
 
     return 0;
 }

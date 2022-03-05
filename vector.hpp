@@ -9,7 +9,7 @@ namespace ft
     class Allocator = std::allocator<T>
 > class vector;
 }
-  
+
 // Defining class outside
 template<
     class T,
@@ -30,24 +30,48 @@ public:
 	typedef RandomAccessIterator<T> 		iterator;
 	typedef ft::reverse_iterator<iterator>		reverse_iterator;
 
-
-	vector() : m_Data(nullptr), m_Size(0), m_Capacity(0)
-	{
-		ReAlloc(2);
+	// Constructors/Destructor
+	explicit vector (const allocator_type& alloc = allocator_type()) : m_Allocator(alloc)
+	{	
+		// Constructs an empty container, with no elements.
+		this->m_Size = 0;
+		this->m_Capacity = 0;
+		m_Data = m_Allocator.allocate(m_Capacity);
 	}
+
+
+	explicit vector (size_type n, const value_type& val = value_type(),
+		const allocator_type& alloc = allocator_type()) 
+		: m_Allocator(alloc), m_Size(n), m_Capacity(n)
+	{
+		// Constructs a container with n elements. Each element is a copy of val.
+		m_Data = m_Allocator.allocate(m_Capacity);
+		for(size_type i = 0; i < m_Size; i++)
+			m_Allocator.construct(&m_Data[i], val);
+	}
+
 	~vector()
 	{
 		clear();
 		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 	}
+	
+	//Capacity
+	size_type size() const
+	{
+		return (this->m_Size);
+	}
 
-	void puch_back(const_reference value)
+	size_type capacity() const
+	{
+		return (this->m_Capacity);
+	}
+
+	void push_back (const value_type& val)
 	{
 		if (m_Size >= m_Capacity)
-			ReAlloc(m_Capacity + m_Capacity / 2);
-	
-		m_Data[m_Size] = value;
-		m_Size++;
+            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+		m_Allocator.construct(&	m_Data[m_Size++], val);
 	}
 
 	void pop_back()
@@ -117,8 +141,8 @@ public:
 	void ReAlloc(size_type newCapacity)
 	{
 		// 1. allocate a new block of memory
-		// 2. copy/move old elements into new block
-		// 3. delete
+		// 2. copy/construct old elements into new block
+		// 3. call destruct the previous one with the destructor
 
 		pointer newBlock = m_Allocator.allocate(newCapacity * sizeof(value_type));
 		
@@ -126,7 +150,7 @@ public:
 			m_Size = newCapacity;
 
 		for (size_type i = 0; i < m_Size; i++)
-			newBlock[i] = m_Data[i];
+			m_Allocator.construct(&newBlock[i], m_Data[i]);
 
 		for (size_type i = 0; i < m_Size; i++)
 		{
