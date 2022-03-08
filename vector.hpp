@@ -1,6 +1,8 @@
 #include <memory>
 #include "RandomAccessIterator.hpp"
 #include "ReverseIterator.hpp"
+#include "enable_if.hpp"
+#include "is_integral.hpp"
 #pragma once
 namespace ft
 {
@@ -49,6 +51,27 @@ public:
 		for(size_type i = 0; i < m_Size; i++)
 			m_Allocator.construct(&m_Data[i], val);
 	}
+
+	// template <class InputIterator, class = typename ft::enable_if<ft::is_integral<T>::value>::type*>
+    // vector (InputIterator first, InputIterator last, 
+	// 	const allocator_type& alloc = allocator_type())
+	// 	: m_Allocator(alloc)
+	// {
+	// 	InputIterator tmp(first);
+	// 	while(tmp != last)
+	// 	{
+	// 		tmp++;
+	// 		m_Size++;
+	// 	}
+		
+	// 	m_Capacity = m_Size;
+	// 	m_Data = m_Allocator.allocate(m_Capacity);
+	// 	for(size_type i = 0; first != last; first++)
+	// 	{
+	// 		m_Allocator.construct(&m_Data[i], *first);
+	// 		i++;
+	// 	}
+	// }
 
 	~vector()
 	{

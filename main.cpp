@@ -5,6 +5,8 @@
 #include <iostream>     // std::cout
 #include <iterator>     // std::iterator_traits
 #include <typeinfo>     // typeid
+#include "is_integral.hpp"
+#include "enable_if.hpp"
 
 
 template <typename T>
@@ -16,38 +18,52 @@ void print_vector(const ft::vector<T>& vector)
 	}
 	std::cout << "-------------------" << std::endl;
 }
+template <unsigned n>
+struct factorial :integral_constant<int,n * factorial<n-1>::value> {};
 
+template <>
+struct factorial<0> : integral_constant<int,1> {};
+
+// 1. the return type (bool) is only valid if T is an integral type:
+template <class T>
+typename ft::enable_if<std::is_integral<T>::value,bool>::type
+  is_odd (T i) {return bool(i%2);}
+
+// 2. the second template argument is only valid if T is an integral type:
+template < class T,
+           class = typename ft::enable_if<std::is_integral<T>::value>::type>
+bool is_even (T i) {return !bool(i%2);}
 int main()
 {
-	{
-		ft::vector<std::string> vec;
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.push_back("chicky");
-		vec.push_back("akira");
-		vec.push_back("test");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.pop_back();
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// {
+	// 	ft::vector<std::string> vec;
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.push_back("chicky");
+	// 	vec.push_back("akira");
+	// 	vec.push_back("test");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.pop_back();
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
 
 
-		vec.push_back("test2");
-		vec.push_back("test3");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n";  
-		vec.clear();
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.push_back("test4");
-		vec.push_back("test5");
-		vec.push_back("test4");
-		vec.push_back("test5");
-		vec.push_back("test4");
-		vec.push_back("test5");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-	}
+	// 	vec.push_back("test2");
+	// 	vec.push_back("test3");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n";  
+	// 	vec.clear();
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// }
 
 
 	// //test iterator_traits
@@ -320,6 +336,34 @@ int main()
 	// 	// reverse_iterator::operator[] example
 	// 	std::cout << "The fourth element from the end is: " << rev_iterator[1] << '\n';
 	// }
+	// integral_constant::operator value_type example
 
+	{
+		// is_integral<T> inherits from integral_constant
+
+		if ( ft::is_integral<int>() )
+			std::cout << "int is an integral type" << std::endl;
+
+		// same result as:
+		if ( ft::is_integral<int>::value )
+			std::cout << "int is an integral type" << std::endl;
+	}
+	{
+		 std::cout << factorial<5>::value;  // constexpr (no calculations on runtime)
+	}
+
+	{
+		// enable_if example: two ways of using enable_if
+		short int i = 1;    // code does not compile if type of i is not integral
+
+  		std::cout << std::boolalpha;
+  		std::cout << "i is odd: " << is_odd(i) << std::endl;
+  		std::cout << "i is even: " << is_even(i) << std::endl;
+	}
+	// {
+	// 	//test Constructs a container with as many elements as the range 
+	// 	ft::vector<int> second (4,100);                       // four ints with value 100
+  	// 	std::vector<int> third (second.begin(),second.end());  // iterating through second
+	// }
     return 0;
 }

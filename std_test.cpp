@@ -12,43 +12,43 @@ void print_vector(const std::vector<T>& vector)
 }
 int main()
 {
-	{
-		std::vector<std::string> vec;
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.push_back("chicky");
-		vec.push_back("akira");
-		vec.push_back("test");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.pop_back();
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// {
+	// 	std::vector<std::string> vec;
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.push_back("chicky");
+	// 	vec.push_back("akira");
+	// 	vec.push_back("test");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.pop_back();
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
 
 
-		vec.push_back("test2");
-		vec.push_back("test3");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n";  
-		vec.clear();
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-		vec.push_back("test4");
-		vec.push_back("test5");
-		vec.push_back("test4");
-		vec.push_back("test5");
-		vec.push_back("test4");
-		vec.push_back("test5");
-		print_vector(vec);
-		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-	}
+	// 	vec.push_back("test2");
+	// 	vec.push_back("test3");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n";  
+	// 	vec.clear();
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	vec.push_back("test4");
+	// 	vec.push_back("test5");
+	// 	print_vector(vec);
+	// 	std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
+	// }
 	
-	{
-		std::vector<int> second (4,100);                       // four ints with value 100
-  		std::vector<int> third (second.begin(),second.end());  // iterating through second
-		for (std::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
-    		std::cout << ' ' << *it;
-		std::cout << '\n';
-	}
+	// {
+	// 	std::vector<int> second (4,100);                       // four ints with value 100
+  	// 	std::vector<int> third (second.begin(),second.end());  // iterating through second
+	// 	for (std::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+    // 		std::cout << ' ' << *it;
+	// 	std::cout << '\n';
+	// }
 
 	// //test iterator_traits
 	// typedef std::iterator_traits<int*> traits;
@@ -221,4 +221,16 @@ int main()
 	// 		std::cout << ' ' << *rev_from++;
 	// 	std::cout << '\n';
 	// }
+	// is_integral example
+#include <iostream>
+#include <type_traits>
+
+	{
+	std::cout << std::boolalpha;
+	std::cout << "is_integral:" << std::endl;
+	std::cout << "char: " << std::is_integral<char>::value << std::endl;
+	std::cout << "int: " << std::is_integral<int>::value << std::endl;
+	std::cout << "float: " << std::is_integral<float>::value << std::endl;
+	return 0;
+	}
 }
