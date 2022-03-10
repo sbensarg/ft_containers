@@ -44,34 +44,37 @@ public:
 
 	explicit vector (size_type n, const value_type& val = value_type(),
 		const allocator_type& alloc = allocator_type()) 
-		: m_Allocator(alloc), m_Size(n), m_Capacity(n)
+		: m_Allocator(alloc)
 	{
 		// Constructs a container with n elements. Each element is a copy of val.
+		this->m_Size = n;
+		this->m_Capacity = n;
 		m_Data = m_Allocator.allocate(m_Capacity);
 		for(size_type i = 0; i < m_Size; i++)
 			m_Allocator.construct(&m_Data[i], val);
 	}
-
-	// template <class InputIterator, class = typename ft::enable_if<ft::is_integral<T>::value>::type*>
-    // vector (InputIterator first, InputIterator last, 
-	// 	const allocator_type& alloc = allocator_type())
-	// 	: m_Allocator(alloc)
-	// {
-	// 	InputIterator tmp(first);
-	// 	while(tmp != last)
-	// 	{
-	// 		tmp++;
-	// 		m_Size++;
-	// 	}
+	// the second template argument is only valid if InputIterator is not an integral type:
+	template <class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
+    vector (InputIterator first, InputIterator last, 
+		const allocator_type& alloc = allocator_type())
+		: m_Allocator(alloc)
+	{
+		this->m_Size = 0;
+		InputIterator tmp(first);
+		while(tmp != last)
+		{
+			tmp++;
+			m_Size++;
+		}
 		
-	// 	m_Capacity = m_Size;
-	// 	m_Data = m_Allocator.allocate(m_Capacity);
-	// 	for(size_type i = 0; first != last; first++)
-	// 	{
-	// 		m_Allocator.construct(&m_Data[i], *first);
-	// 		i++;
-	// 	}
-	// }
+		m_Capacity = m_Size;
+		m_Data = m_Allocator.allocate(m_Capacity);
+		for(size_type i = 0; first != last; first++)
+		{
+			m_Allocator.construct(&m_Data[i], *first);
+			i++;
+		}
+	}
 
 	~vector()
 	{

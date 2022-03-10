@@ -360,10 +360,13 @@ int main()
   		std::cout << "i is odd: " << is_odd(i) << std::endl;
   		std::cout << "i is even: " << is_even(i) << std::endl;
 	}
-	// {
-	// 	//test Constructs a container with as many elements as the range 
-	// 	ft::vector<int> second (4,100);                       // four ints with value 100
-  	// 	std::vector<int> third (second.begin(),second.end());  // iterating through second
-	// }
+	{
+		//test Constructs a container with as many elements as the range 
+		ft::vector<int> second (4,100);                       // four ints with value 100
+  		ft::vector<int> third (second.begin(),second.end());  // iterating through second
+		for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+    		std::cout << ' ' << *it;
+  		std::cout << '\n';
+	}
     return 0;
 }
