@@ -232,5 +232,124 @@ int main()
 		std::cout << "capacity: " << myvector.capacity() << "\n";
 		std::cout << "max_size: " << myvector.max_size() << "\n";
 	}
+
+	{
+		std::vector<int> myvector;
+
+		// set some initial content:
+		for (int i=1;i<10;i++) myvector.push_back(i);
+
+		myvector.resize(5);
+		myvector.resize(8,100);
+		myvector.resize(12);
+		std::cout << "size : " << myvector.size() << " capacity :" << myvector.capacity() << "\n"; 
+		std::cout << "myvector contains:";
+		for (int i=0;i<myvector.size();i++)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
+
+	}
+	{
+		std::vector<int>::size_type sz;
+
+		std::vector<int> foo;
+		sz = foo.capacity();
+		std::cout << "making foo grow:\n";
+		for (int i=0; i<100; ++i) {
+			foo.push_back(i);
+			if (sz!=foo.capacity()) {
+			sz = foo.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+			}
+		}
+	}
+
+	{
+		std::vector<int>::size_type sz;
+
+		std::vector<int> foo;
+		sz = foo.capacity();
+		std::cout << "making foo grow:\n";
+		for (int i=0; i<100; ++i) {
+			foo.push_back(i);
+			if (sz!=foo.capacity()) {
+			sz = foo.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+			}
+		}
+		 try {
+			// vector throws a length_error if resized above max_size
+				std::vector<int> bar;
+				sz = bar.capacity();
+				bar.reserve(4611686018427387906);   // this is the only difference with foo above
+				std::cout << "making bar grow:\n";
+				for (int i=0; i<100; ++i) {
+					bar.push_back(i);
+					if (sz!=bar.capacity()) {
+					sz = bar.capacity();
+					std::cout << "capacity changed: " << sz << '\n';
+					}
+				}
+  			}		
+  		catch (const std::length_error& le) {
+	  		std::cerr << "Length error: " << le.what() << '\n';
+  		}
+		
+	}
+
+	{
+		std::vector<int> myvector;
+		int sum (0);
+
+		for (int i=1;i<=10;i++) myvector.push_back(i);
+
+		while (!myvector.empty())
+		{
+			sum += myvector.back();
+			myvector.pop_back();
+		}
+
+		std::cout << "total: " << sum << '\n';
+	}
+	{
+		try
+		{
+		
+			std::vector<int> myvector (10);   // 10 zero-initialized ints
+
+			// assign some values:
+			for (unsigned i=0; i<myvector.size(); i++)
+				myvector.at(i)=i;
+			//	std::cout << "myvector contains:";
+			for (unsigned i=0; i<myvector.size(); i++)
+				std::cout << ' ' << myvector.at(30);
+			std::cout << '\n';
+		}
+	
+		catch(const std::out_of_range& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+	}
+	
+	{
+		std::vector<int> first;
+		std::vector<int> second;
+		std::vector<int> third;
+
+		first.assign (7,100);             // 7 ints with a value of 100
+
+		std::vector<int>::iterator it;
+		it=first.begin()+1;
+
+		second.assign (it,first.end()-1); // the 5 central values of first
+
+		int myints[] = {1776,7,4};
+		third.assign (myints,myints+3);   // assigning from array.
+
+		std::cout << "Size of first: " << int (first.size()) << '\n';
+		std::cout << "Size of second: " << int (second.size()) << '\n';
+		std::cout << "Size of third: " << int (third.size()) << '\n';
+	}
 	
 }

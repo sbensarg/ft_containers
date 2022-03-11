@@ -338,60 +338,197 @@ int main()
 	// }
 	// integral_constant::operator value_type example
 
+	// {
+	// 	// is_integral<T> inherits from integral_constant
+
+	// 	if ( ft::is_integral<int>() )
+	// 		std::cout << "int is an integral type" << std::endl;
+
+	// 	// same result as:
+	// 	if ( ft::is_integral<int>::value )
+	// 		std::cout << "int is an integral type" << std::endl;
+	// }
+	// {
+	// 	 std::cout << factorial<5>::value;  // constexpr (no calculations on runtime)
+	// }
+
+	// {
+	// 	// enable_if example: two ways of using enable_if
+	// 	short int i = 1;    // code does not compile if type of i is not integral
+
+	// 	std::cout << std::boolalpha;
+	// 	std::cout << "i is odd: " << is_odd(i) << std::endl;
+	// 	std::cout << "i is even: " << is_even(i) << std::endl;
+	// }
+
+	// {
+	// 	//test Constructs a container with as many elements as the range 
+	// 	ft::vector<int> second (4,300);                       // four ints with value 100
+  	// 	ft::vector<int> third (second.begin(),second.end());  // iterating through second
+	// 	ft::vector<int> fourth (third);                       // a copy of third
+	// 	for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+    // 		std::cout << ' ' << *it;
+	// 	std::cout << '\n';
+	// }
+
+	// {
+	// 	ft::vector<int> foo (3,0);
+	// 	ft::vector<int> bar (5,0);
+
+	// 	bar = foo;
+	// 	foo = ft::vector<int>();
+
+	// 	std::cout << "Size of foo: " << int(foo.size()) << '\n';
+	// 	std::cout << "Size of bar: " << int(bar.size()) << '\n';
+	// }
+
+	// {
+	// 	// comparing size, capacity and max_size
+	// 	ft::vector<int> myvector;
+
+	// 	// set some content in the vector:
+	// 	for (int i=0; i<100; i++) myvector.push_back(i);
+
+	// 	std::cout << "size: " << myvector.size() << "\n";
+	// 	std::cout << "capacity: " << myvector.capacity() << "\n";
+	// 	std::cout << "max_size: " << myvector.max_size() << "\n";
+	// }
+
 	{
-		// is_integral<T> inherits from integral_constant
+		ft::vector<int> myvector;
 
-		if ( ft::is_integral<int>() )
-			std::cout << "int is an integral type" << std::endl;
+		// set some initial content:
+		for (int i=1;i<10;i++) myvector.push_back(i);
 
-		// same result as:
-		if ( ft::is_integral<int>::value )
-			std::cout << "int is an integral type" << std::endl;
+		myvector.resize(5);
+		myvector.resize(8,100);
+		myvector.resize(12);
+		std::cout << "size : " << myvector.size() << " capacity :" << myvector.capacity() << "\n"; 
+		std::cout << "myvector contains:";
+		for (size_t i=0;i<myvector.size();i++)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
+
 	}
+
 	{
-		 std::cout << factorial<5>::value;  // constexpr (no calculations on runtime)
+		ft::vector<int>::size_type sz;
+
+		ft::vector<int> foo;
+		sz = foo.capacity();
+		std::cout << "making foo grow:\n";
+		for (int i=0; i<100; ++i) {
+			foo.push_back(i);
+			if (sz!=foo.capacity()) {
+			sz = foo.capacity();
+			std::cout << "capacity changed: " << sz << '\n';
+			}
+		}
+		 try {
+			// vector throws a length_error if resized above max_size
+				ft::vector<int> bar;
+				sz = bar.capacity();
+				bar.reserve(4611686018427387906);   // this is the only difference with foo above
+				std::cout << "making bar grow:\n";
+				for (int i=0; i<100; ++i) {
+					bar.push_back(i);
+					if (sz!=bar.capacity()) {
+					sz = bar.capacity();
+					std::cout << "capacity changed: " << sz << '\n';
+					}
+				}
+  			}		
+  		catch (const std::length_error& le) {
+	  		std::cerr << "Length error: " << le.what() << '\n';
+  		}
+		
 	}
 
-	{
-		// enable_if example: two ways of using enable_if
-		short int i = 1;    // code does not compile if type of i is not integral
+	// {
+	// 	ft::vector<int> myvector;
+	// 	int sum (0);
 
-		std::cout << std::boolalpha;
-		std::cout << "i is odd: " << is_odd(i) << std::endl;
-		std::cout << "i is even: " << is_even(i) << std::endl;
-	}
+	// 	for (int i=1;i<=10;i++) myvector.push_back(i);
+
+	// 	while (!myvector.empty())
+	// 	{
+	// 		sum += myvector.back();
+	// 		myvector.pop_back();
+	// 	}
+
+	// 	std::cout << "total: " << sum << '\n';
+	// }
 
 	{
-		//test Constructs a container with as many elements as the range 
-		ft::vector<int> second (4,300);                       // four ints with value 100
-  		ft::vector<int> third (second.begin(),second.end());  // iterating through second
-		ft::vector<int> fourth (third);                       // a copy of third
-		for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-    		std::cout << ' ' << *it;
+		//test vector back
+		ft::vector<int> myvector;
+
+		myvector.push_back(10);
+
+		while (myvector.back() != 0)
+		{
+			myvector.push_back ( myvector.back() -1 );
+		}
+
+		std::cout << "myvector contains:";
+		for (unsigned i=0; i<myvector.size() ; i++)
+			std::cout << ' ' << myvector[i];
 		std::cout << '\n';
 	}
 
 	{
-		ft::vector<int> foo (3,0);
-		ft::vector<int> bar (5,0);
+		// test vector::front
+		ft::vector<int> myvector;
 
-		bar = foo;
-		foo = ft::vector<int>();
+		myvector.push_back(78);
+		myvector.push_back(16);
 
-		std::cout << "Size of foo: " << int(foo.size()) << '\n';
-		std::cout << "Size of bar: " << int(bar.size()) << '\n';
+		// now front equals 78, and back 16
+
+		myvector.front() -= myvector.back();
+
+		std::cout << "myvector.front() is now " << myvector.front() << '\n';
 	}
 
 	{
-		// comparing size, capacity and max_size
-		ft::vector<int> myvector;
+		try
+		{
+			//test vector::at
+			ft::vector<int> myvector (10);   // 10 zero-initialized ints
 
-		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector.push_back(i);
+			// assign some values:
+			for (unsigned i=0; i<myvector.size(); i++)
+				myvector.at(i)=i;
 
-		std::cout << "size: " << myvector.size() << "\n";
-		std::cout << "capacity: " << myvector.capacity() << "\n";
-		std::cout << "max_size: " << myvector.max_size() << "\n";
+			//std::cout << "myvector contains:";
+			for (unsigned i=0; i<myvector.size(); i++)
+				std::cout << ' ' << myvector.at(30);
+			std::cout << '\n';
+		}
+		catch(const std::out_of_range& e)
+		{
+			std::cerr << e.what() << '\n';
+		}
+	}
+
+	{
+		std::vector<int> first;
+		ft::vector<int> second;
+		ft::vector<int> third;
+
+		first.assign (7,100);             // 7 ints with a value of 100
+
+		std::vector<int>::iterator it;
+		it=first.begin()+1;
+
+		second.assign (it,first.end()-1); // the 5 central values of first
+
+		int myints[] = {1776,7,4};
+		third.assign (myints,myints+3);   // assigning from array.
+
+		std::cout << "Size of first: " << int (first.size()) << '\n';
+		std::cout << "Size of second: " << int (second.size()) << '\n';
+		std::cout << "Size of third: " << int (third.size()) << '\n';
 	}
     return 0;
 }

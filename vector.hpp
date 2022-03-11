@@ -3,6 +3,7 @@
 #include "ReverseIterator.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
+#include <stdexcept>
 #pragma once
 namespace ft
 {
@@ -113,13 +114,52 @@ public:
 		return m_Allocator.max_size();
 	}
 
+	void resize (size_type n, value_type val = value_type())
+	{
+		// Resizes the container so that it contains n elements.
+		
+		if (n < this->m_Size)
+		{
+			this->m_Size = n;
+		}
+		else if (n > this->m_Size)
+		{
+			if (m_Size >= m_Capacity)
+            	ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+			while (m_Size < n)
+			{
+				m_Allocator.construct(&	m_Data[m_Size++], val);
+			}
+		}
+	}
 
-	//Capacity
+	void reserve (size_type n)
+	{
+		//Request a change in capacity
+		if (n > max_size())
+			throw std::length_error("allocator<T>::allocate(size_t n) 'n' exceeds maximum supported size");
+			
+		if (n > m_Capacity)
+		{
+			this->m_Capacity = n;
+			ReAlloc(m_Capacity);
+		}
+	}
+
+	bool empty() const
+	{
+		//Test whether vector is empty
+		if (this->m_Size == 0)
+			return (true);
+		else
+			return (false);
+	}
+
 	size_type size() const
 	{
 		return (this->m_Size);
 	}
-
+	//Capacity
 	size_type capacity() const
 	{
 		return (this->m_Capacity);
@@ -168,9 +208,40 @@ public:
 		return m_Data[index];
 	}
 
-	size_type Size() const
+	reference at (size_type n)
 	{
-		return (m_Size);
+		//Returns a reference to the element at position n in the vector.
+		if (n >= this->m_Size)
+			throw std::out_of_range("vector");
+		return m_Data[n];
+	}
+
+	const_reference at (size_type n) const
+	{
+		if (n >= this->m_Size)
+			throw std::out_of_range("vector");
+		return m_Data[n];
+	}
+
+	reference front()
+	{
+		//Returns a reference to the first element in the vector.
+		return m_Data[0];
+	}
+
+	const_reference front() const
+	{
+		return m_Data[0];
+	}
+
+	reference back()
+	{
+		//Returns a reference to the last element in the vector.
+		return m_Data[m_Size - 1];
+	}
+	const_reference back() const
+	{
+		return m_Data[m_Size - 1];
 	}
 
 	iterator begin()
@@ -189,6 +260,16 @@ public:
 	{
 		return reverse_iterator(begin());
 	}
+
+	template <class InputIterator>
+	void assign (InputIterator first, InputIterator last)
+	{
+		for( ; first != last; first++)
+		{
+			push_back(*first);
+		}
+	}
+
 
  private:
 	pointer			m_Data;
