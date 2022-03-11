@@ -356,17 +356,42 @@ int main()
 		// enable_if example: two ways of using enable_if
 		short int i = 1;    // code does not compile if type of i is not integral
 
-  		std::cout << std::boolalpha;
-  		std::cout << "i is odd: " << is_odd(i) << std::endl;
-  		std::cout << "i is even: " << is_even(i) << std::endl;
+		std::cout << std::boolalpha;
+		std::cout << "i is odd: " << is_odd(i) << std::endl;
+		std::cout << "i is even: " << is_even(i) << std::endl;
 	}
+
 	{
 		//test Constructs a container with as many elements as the range 
-		ft::vector<int> second (4,100);                       // four ints with value 100
+		ft::vector<int> second (4,300);                       // four ints with value 100
   		ft::vector<int> third (second.begin(),second.end());  // iterating through second
-		for (ft::vector<int>::iterator it = third.begin(); it != third.end(); ++it)
+		ft::vector<int> fourth (third);                       // a copy of third
+		for (ft::vector<int>::iterator it = fourth.begin(); it != fourth.end(); ++it)
     		std::cout << ' ' << *it;
-  		std::cout << '\n';
+		std::cout << '\n';
+	}
+
+	{
+		ft::vector<int> foo (3,0);
+		ft::vector<int> bar (5,0);
+
+		bar = foo;
+		foo = ft::vector<int>();
+
+		std::cout << "Size of foo: " << int(foo.size()) << '\n';
+		std::cout << "Size of bar: " << int(bar.size()) << '\n';
+	}
+
+	{
+		// comparing size, capacity and max_size
+		ft::vector<int> myvector;
+
+		// set some content in the vector:
+		for (int i=0; i<100; i++) myvector.push_back(i);
+
+		std::cout << "size: " << myvector.size() << "\n";
+		std::cout << "capacity: " << myvector.capacity() << "\n";
+		std::cout << "max_size: " << myvector.max_size() << "\n";
 	}
     return 0;
 }

@@ -21,15 +21,15 @@ class ft::vector
 {
 public:
 	// Attributes
-	typedef T								value_type;
-	typedef Allocator						allocator_type;
-	typedef T*								pointer;
-	typedef const T*						const_pointer;
-	typedef T&								reference;
-	typedef const T&						const_reference;
-	typedef std::size_t						size_type;
-	typedef std::ptrdiff_t					difference_type;
-	typedef RandomAccessIterator<T> 		iterator;
+	typedef T									value_type;
+	typedef Allocator							allocator_type;
+	typedef T*									pointer;
+	typedef const T*							const_pointer;
+	typedef T&									reference;
+	typedef const T&							const_reference;
+	typedef std::size_t							size_type;
+	typedef std::ptrdiff_t						difference_type;
+	typedef RandomAccessIterator<T> 			iterator;
 	typedef ft::reverse_iterator<iterator>		reverse_iterator;
 
 	// Constructors/Destructor
@@ -59,6 +59,8 @@ public:
 		const allocator_type& alloc = allocator_type())
 		: m_Allocator(alloc)
 	{
+		/*Constructs a container with as many elements as the range [first,last),
+		with each element constructed from its corresponding element in that range, in the same order.*/
 		this->m_Size = 0;
 		InputIterator tmp(first);
 		while(tmp != last)
@@ -75,13 +77,43 @@ public:
 			i++;
 		}
 	}
+	vector (const vector& x)
+	{
+		//Constructs a container with a copy of each of the elements in x, in the same order.
+		this->m_Allocator = x.m_Allocator;
+		this->m_Size = x.m_Size;
+		this->m_Capacity = x.m_Capacity;
+		m_Data = m_Allocator.allocate(m_Capacity);
+		for(size_type i = 0; i < m_Size; i++)
+			this->m_Data[i] = x.m_Data[i];
+	}
 
 	~vector()
 	{
 		clear();
 		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 	}
-	
+
+	//Assignment operator
+	vector& operator= (const vector& x)
+	{
+		// Assigns new contents to the container, replacing its current contents, and modifying its size accordingly.
+		this->m_Allocator = x.m_Allocator;
+		this->m_Size = x.m_Size;
+		this->m_Capacity = x.m_Capacity;
+		m_Data = m_Allocator.allocate(m_Capacity);
+		for(size_type i = 0; i < m_Size; i++)
+			this->m_Data[i] = x.m_Data[i];
+		return (*this);
+	}
+
+	size_type max_size() const
+	{
+		//Returns the maximum number of elements that the vector can hold.
+		return m_Allocator.max_size();
+	}
+
+
 	//Capacity
 	size_type size() const
 	{

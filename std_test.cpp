@@ -221,16 +221,16 @@ int main()
 	// 		std::cout << ' ' << *rev_from++;
 	// 	std::cout << '\n';
 	// }
-	// is_integral example
-#include <iostream>
-#include <type_traits>
-
 	{
-	std::cout << std::boolalpha;
-	std::cout << "is_integral:" << std::endl;
-	std::cout << "char: " << std::is_integral<char>::value << std::endl;
-	std::cout << "int: " << std::is_integral<int>::value << std::endl;
-	std::cout << "float: " << std::is_integral<float>::value << std::endl;
-	return 0;
+		// comparing size, capacity and max_size
+		std::vector<int> myvector;
+
+		// set some content in the vector:
+		for (int i=0; i<100; i++) myvector.push_back(i);
+
+		std::cout << "size: " << myvector.size() << "\n";
+		std::cout << "capacity: " << myvector.capacity() << "\n";
+		std::cout << "max_size: " << myvector.max_size() << "\n";
 	}
+	
 }
