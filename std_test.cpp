@@ -351,5 +351,46 @@ int main()
 		std::cout << "Size of second: " << int (second.size()) << '\n';
 		std::cout << "Size of third: " << int (third.size()) << '\n';
 	}
-	
+
+	{
+		std::vector<int> myvector (3,100);
+		std::vector<int>::iterator it;
+
+		it = myvector.begin();
+		it = myvector.insert ( it , 200 );
+
+		myvector.insert (it + 2,5,300);
+
+		// "it" no longer valid, get a new one:
+		it = myvector.begin();
+
+		std::vector<int> anothervector (4,400);
+		myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+		int myarray [] = { 501,502,503 };
+		myvector.insert (myvector.begin(), myarray, myarray+3);
+		std::cout << *it << "\n";
+		std::cout << "myvector contains:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+			std::cout << ' ' << *it;
+		std::cout << '\n';
+	}
+
+	{
+		std::vector<int> myvector;
+
+		// set some values (from 1 to 10)
+		for (int i=1; i<=10; i++) myvector.push_back(i);
+
+		// erase the 6th element
+		myvector.erase (myvector.begin()+5);
+
+		// // erase the first 3 elements:
+		// myvector.erase (myvector.begin(),myvector.begin()+3);
+
+		std::cout << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); ++i)
+			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
+	}
 }

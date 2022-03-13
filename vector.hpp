@@ -4,6 +4,7 @@
 #include "enable_if.hpp"
 #include "is_integral.hpp"
 #include <stdexcept>
+#include <algorithm>
 #pragma once
 namespace ft
 {
@@ -167,6 +168,7 @@ public:
 
 	void push_back (const value_type& val)
 	{
+		// Add element at the end
 		if (m_Size >= m_Capacity)
             ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
 		m_Allocator.construct(&	m_Data[m_Size++], val);
@@ -261,14 +263,91 @@ public:
 		return reverse_iterator(begin());
 	}
 
-	template <class InputIterator>
+	template <class InputIterator , class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
 	void assign (InputIterator first, InputIterator last)
 	{
+		// the new contents are elements constructed from each of the elements in the range between first and last, in the same order.
+		clear();
 		for( ; first != last; first++)
 		{
 			push_back(*first);
 		}
 	}
+	
+	void assign (size_type n, const value_type& val)
+	{
+		// the new contents are n elements, each initialized to a copy of val.
+		if (this->m_Size < n)
+		{
+			m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
+			m_Data = m_Allocator.allocate(n);
+			this->m_Capacity = n;
+		}
+		this->m_Size = n;
+		for(size_type i = 0; i < m_Size; i++)
+			m_Allocator.construct(&m_Data[i], val);
+	}
+
+	iterator insert (iterator position, const value_type& val)
+	{
+		/* insert() also needs to grow the array, if needed. 
+		It can then figure out the index where the new value should go, 
+		shift all of the elements after that index up one slot in the array, 
+		and then assign the new value to the element at that index. */
+		int index = position - begin();
+		if (m_Size >= m_Capacity)
+            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+		for (int i = this->m_Size - 1; i >= index; --i)
+			m_Data[i + 1] = m_Data[i];
+		
+		m_Data[index] = val;
+		++m_Size;
+		return iterator (m_Data + index);
+		//return (position);
+	}
+
+	void insert (iterator position, size_type n, const value_type& val)
+	{
+		size_type index = position - begin();
+		if (m_Size + n >= m_Capacity)
+            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+		// Moves the elements in the range [first,last) starting from the end into the range terminating at result.
+		std::move_backward(begin() + index , end() , end() + n);
+
+		for(size_type i = index; i < index + n; i++)
+		{
+			m_Allocator.construct(&m_Data[i], val);
+		}
+		this->m_Size += n;
+	}
+
+	template <class InputIterator,  class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
+    void insert (iterator position, InputIterator first, InputIterator last)
+	{
+		size_type index = position - begin();
+		size_type n = last - first;
+		if (m_Size + n >= m_Capacity)
+            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+
+		std::move_backward(begin() + index , end() , end() + n);
+
+		for(size_type i = index; i < index + n; i++)
+		{
+			m_Allocator.construct(&m_Data[i], *first);
+			first++;
+		}
+		this->m_Size += n;
+	}
+
+	// iterator erase (iterator position)
+	// {
+	// 	int index = position - begin();
+	// 	for (int i = this->m_Size - 1; i >= index; --i)
+	// 		m_Data[i + 1] = m_Data[i];
+	// 	m_Data[index].~T();
+	// 	this->m_Size -= 1;
+	// 	return position;
+	// }
 
 
  private:
@@ -295,7 +374,6 @@ public:
 		{
 			m_Data[i].~T();
 		}
-
 		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 		m_Data = newBlock;
 		m_Capacity = newCapacity;
