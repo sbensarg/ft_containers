@@ -32,6 +32,7 @@ public:
 	typedef std::size_t							size_type;
 	typedef std::ptrdiff_t						difference_type;
 	typedef RandomAccessIterator<T> 			iterator;
+	
 	typedef ft::reverse_iterator<iterator>		reverse_iterator;
 
 	// Constructors/Destructor
@@ -339,16 +340,31 @@ public:
 		this->m_Size += n;
 	}
 
-	// iterator erase (iterator position)
-	// {
-	// 	int index = position - begin();
-	// 	for (int i = this->m_Size - 1; i >= index; --i)
-	// 		m_Data[i + 1] = m_Data[i];
-	// 	m_Data[index].~T();
-	// 	this->m_Size -= 1;
-	// 	return position;
-	// }
+	iterator erase (iterator position)
+	{
+		int index = position - begin();
+	//	int tmp = index;
+	//	m_Data[index].~T();
+		//std::cout << "tmp " << tmp << "\n";
+		for (size_type i = index; i < m_Size; i++)
+			m_Data[i] = m_Data[i + 1];
+		this->m_Size--;
+		return position;
+	}
 
+	iterator erase (iterator first, iterator last)
+	{
+		for (iterator i = first; i < last; i++)
+			erase(first);
+		return first;
+	}
+
+	void swap (vector& x)
+	{
+		std::swap(m_Size, x.m_Size);
+		std::swap(m_Capacity, x.m_Capacity);
+		std::swap(m_Data, x.m_Data);
+	}
 
  private:
 	pointer			m_Data;

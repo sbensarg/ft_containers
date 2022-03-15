@@ -378,19 +378,40 @@ int main()
 
 	{
 		std::vector<int> myvector;
-
+		std::vector<int>::iterator it;
+		std::vector<int>::iterator it1;
 		// set some values (from 1 to 10)
 		for (int i=1; i<=10; i++) myvector.push_back(i);
 
 		// erase the 6th element
-		myvector.erase (myvector.begin()+5);
-
+		it = myvector.erase (myvector.begin()+5);
+		std::cout << "iterator pointing to the new location " << *it << "\n";
 		// // erase the first 3 elements:
-		// myvector.erase (myvector.begin(),myvector.begin()+3);
+		it1 = myvector.erase (myvector.begin(),myvector.begin()+3);
+			std::cout << "it1 " << *it1 << "\n";
 
 		std::cout << "myvector contains:";
+		std::cout << myvector.size() << "\n";
 		for (unsigned i=0; i<myvector.size(); ++i)
 			std::cout << ' ' << myvector[i];
+		std::cout << '\n';
+	}
+
+	{
+		std::cout << "swap vectors test\n";
+		std::vector<int> foo (3,100);   // three ints with a value of 100
+		std::vector<int> bar (5,200);   // five ints with a value of 200
+
+		foo.swap(bar);
+
+		std::cout << "foo contains:";
+		for (unsigned i=0; i<foo.size(); i++)
+			std::cout << ' ' << foo[i];
+		std::cout << '\n';
+
+		std::cout << "bar contains:";
+		for (unsigned i=0; i<bar.size(); i++)
+			std::cout << ' ' << bar[i];
 		std::cout << '\n';
 	}
 }
