@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "iterators_traits.hpp"
 #pragma once
@@ -19,7 +18,7 @@ public:
 		X b(a);
 		b = a;
 	*/
-	RandomAccessIterator(void) : _ptr(nullptr)
+	RandomAccessIterator(void) : _ptr(NULL)
 	{
 
 	}
@@ -127,7 +126,11 @@ public:
 		a - n
 		a - b
 	*/
-	RandomAccessIterator operator+(const difference_type & other) const // a + n
+	// RandomAccessIterator operator+(const difference_type & other) const // a + n
+	// {
+	// 	return RandomAccessIterator(_ptr + other);
+	// }
+	RandomAccessIterator operator+(int other) const // a + n
 	{
 		return RandomAccessIterator(_ptr + other);
 	}

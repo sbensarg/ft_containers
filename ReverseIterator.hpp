@@ -18,7 +18,7 @@ public:
 	typedef typename ft::iterator_traits<Iterator>::pointer					pointer;
 	typedef typename ft::iterator_traits<Iterator>::difference_type			difference_type;
 
-	reverse_iterator() : _it(nullptr)
+	reverse_iterator() : _it(NULL)
 	{
 
 	}
@@ -141,7 +141,7 @@ template <class Iterator>
 ft::reverse_iterator<Iterator> operator+ ( typename ft::reverse_iterator<Iterator>::difference_type n,
             const ft::reverse_iterator<Iterator>& rev_it)
 {
-	return ft::reverse_iterator<Iterator>(n + rev_it.base());
+	return ft::reverse_iterator<Iterator>(rev_it.base() - n);
 }
 
 //Subtraction operator
@@ -150,7 +150,7 @@ template <class Iterator>
 ft::reverse_iterator<Iterator> operator- ( typename ft::reverse_iterator<Iterator>::difference_type n,
             const ft::reverse_iterator<Iterator>& rev_it)
 {
-	return ft::reverse_iterator<Iterator>(n - rev_it.base());
+	return ft::reverse_iterator<Iterator>(rev_it.base() + n);
 }
 
 template <class Iterator>
@@ -158,5 +158,5 @@ typename ft::reverse_iterator<Iterator>::difference_type operator- (
     const ft::reverse_iterator<Iterator>& lhs,
     const ft::reverse_iterator<Iterator>& rhs)
 {
-	return (lhs.base() - rhs.base());
+	return (rhs.base() - lhs.base());
 }

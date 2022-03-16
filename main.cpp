@@ -165,56 +165,55 @@ int main()
     // std::cout <<  "myIt1 :" << *myIt1 << "\n";
     // std::cout << "myIt3 :"  << *myIt3 << "\n";
 
-	// std::cout << "8 ---------------" << "\n";
-	// {
-	// 	ft::vector<int> vect;
-	// 	vect.puch_back(10);
-	// 	vect.puch_back(11);
-	// 	vect.puch_back(43);
-	// 	vect.puch_back(66);
-	// 	vect.puch_back(90);
-	// 	ft::vector<int>::iterator it = vect.begin();
-	// 	std::cout << *it <<"\n";
-	// 	std::cout << it[0] <<"\n";
-	// 	// a + n
-	// 	ft::vector<int>::iterator ret = it + 3;
-
-	// 	std::cout << "*ret " << *ret << "\n";
-	// 	std::cout << "*it " << *it << "\n";
-	// 	// n + a
-	// 	ft::vector<int>::iterator ret3  = 1 + ret; 
-	// 	std::cout << "*ret3 " << *ret3 << "\n";
-	// 	std::cout << "*it " << *it << "\n";
-	// 	// a - n
-	// 	ft::vector<int>::iterator ret4  = ret3 - 1; 
-	// 	std::cout << "*ret4 " << *ret4 << "\n";
-	// 	std::cout << "*it " << *it << "\n";
-	// 	// a - b
-	// 	int ret5  = ret4 - it; 
-	// 	std::cout << "*ret5 " << ret5 << "\n";
-	// 	std::cout << "*it " << *it << "\n";
-	// 	// test comparison operators 
-	// 	if (ret == ret4)
-	// 		std::cout << *ret << " = " << *ret4 << "\n";
-	// 	if (it != ret4)
-	// 		std::cout << *it << " != " << *ret4 << "\n";
-	// 	if (it < ret4)
-	// 		std::cout << *it << " < " << *ret4 << "\n";
-	// 	if (ret3 > ret)
-	// 		std::cout << *ret3 << " > " << *ret << "\n";
-	// 	if (it <= ret4)
-	// 		std::cout << *it << " <= " << *ret4 << "\n";
-	// 	if (ret3 >= ret)
-	// 		std::cout << *ret3 << " >= " << *ret << "\n";
-	// 	// a += n
-	// 	ft::vector<int>::iterator p  = ret += 1; 
-	// 	std::cout << "ret += 1 ==> " << *p << "\n";
-	// 	std::cout << "ret ==> " << *ret << "\n";
-	// 	// a -= n
-	// 	ft::vector<int>::iterator m = ret -= 1;
-	// 	std::cout << "ret -= 1 ==> " << *m << "\n";
-	// 	std::cout << "ret ==> " << *ret << "\n";
-
+	std::cout << "8 ---------------" << "\n";
+	{
+		ft::vector<int> vect;
+		vect.push_back(10);
+		vect.push_back(11);
+		vect.push_back(43);
+		vect.push_back(66);
+		vect.push_back(90);
+		ft::vector<int>::iterator it = vect.begin();
+		std::cout << *it <<"\n";
+		std::cout << it[0] <<"\n";
+		// a + n
+		ft::vector<int>::iterator ret = it + 3;
+		std::cout << "*ret " << *ret << "\n";
+		std::cout << "*it " << *it << "\n";
+		// n + a
+		ft::vector<int>::iterator ret3  = 1 + ret; 
+		std::cout << "*ret3 " << *ret3 << "\n";
+		std::cout << "*it " << *it << "\n";
+		// a - n
+		ft::vector<int>::iterator ret4  = ret3 - 1; 
+		std::cout << "*ret4 " << *ret4 << "\n";
+		std::cout << "*it " << *it << "\n";
+		// a - b
+		int ret5  = ret4 - it; 
+		std::cout << "*ret5 " << ret5 << "\n";
+		std::cout << "*it " << *it << "\n";
+		// test comparison operators 
+		if (ret == ret4)
+			std::cout << *ret << " = " << *ret4 << "\n";
+		if (it != ret4)
+			std::cout << *it << " != " << *ret4 << "\n";
+		if (it < ret4)
+			std::cout << *it << " < " << *ret4 << "\n";
+		if (ret3 > ret)
+			std::cout << *ret3 << " > " << *ret << "\n";
+		if (it <= ret4)
+			std::cout << *it << " <= " << *ret4 << "\n";
+		if (ret3 >= ret)
+			std::cout << *ret3 << " >= " << *ret << "\n";
+		// a += n
+		ft::vector<int>::iterator p  = ret += 1; 
+		std::cout << "ret += 1 ==> " << *p << "\n";
+		std::cout << "ret ==> " << *ret << "\n";
+		// a -= n
+		ft::vector<int>::iterator m = ret -= 1;
+		std::cout << "ret -= 1 ==> " << *m << "\n";
+	 	std::cout << "ret ==> " << *ret << "\n";
+	}
 	// {
 	// 	//test constuction reverse iterator
 	// 	std::cout << "test constuction reverse iterator" << std::endl;
@@ -596,6 +595,65 @@ int main()
 		for (unsigned i=0; i<bar.size(); i++)
 			std::cout << ' ' << bar[i];
 		std::cout << '\n';
+	}
+
+	{
+		std::cout << "vector::get_allocator\n";
+		ft::vector<int> myvector;
+		int * p;
+		unsigned int i;
+
+		// allocate an array with space for 5 elements using vector's allocator:
+		p = myvector.get_allocator().allocate(5);
+
+		// construct values in-place on the array:
+		for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
+
+		std::cout << "The allocated array contains:";
+		for (i=0; i<5; i++) std::cout << ' ' << p[i];
+		std::cout << '\n';
+
+		// destroy and deallocate:
+		for (i=0; i<5; i++) myvector.get_allocator().destroy(&p[i]);
+		myvector.get_allocator().deallocate(p,5);
+	}
+
+	{
+		std::vector<int> foo (3,100);   // three ints with a value of 100
+		std::vector<int> bar (2,200);   // two ints with a value of 200
+
+		if (foo==bar) std::cout << "foo and bar are equal\n";
+		if (foo!=bar) std::cout << "foo and bar are not equal\n";
+		if (foo< bar) std::cout << "foo is less than bar\n";
+		if (foo> bar) std::cout << "foo is greater than bar\n";
+		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+	}
+
+	{
+		ft::vector<int> myvector;
+		for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
+
+		typedef ft::vector<int>::iterator iter_type;
+
+		ft::reverse_iterator<iter_type> rev_it;
+
+		std::cout <<  *myvector.rbegin() << "\n";
+		rev_it = 3 + myvector.rbegin();
+
+		std::cout << "The fourth element from the end is: " << *rev_it << '\n';
+	}
+
+	{
+		ft::vector<int> myvector;
+		for (int i=0; i<10; i++) myvector.push_back(i);
+
+		ft::reverse_iterator<ft::vector<int>::iterator> from,until;
+
+		from = myvector.rbegin();
+		until = myvector.rend();
+
+		std::cout << "myvector has " << (until-from) << " elements.\n";
 	}
     return 0;
 }

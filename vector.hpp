@@ -23,17 +23,18 @@ class ft::vector
 {
 public:
 	// Attributes
-	typedef T									value_type;
-	typedef Allocator							allocator_type;
-	typedef T*									pointer;
-	typedef const T*							const_pointer;
-	typedef T&									reference;
-	typedef const T&							const_reference;
-	typedef std::size_t							size_type;
-	typedef std::ptrdiff_t						difference_type;
-	typedef RandomAccessIterator<T> 			iterator;
-	
-	typedef ft::reverse_iterator<iterator>		reverse_iterator;
+	typedef T										value_type;
+	typedef Allocator								allocator_type;
+	typedef T*										pointer;
+	typedef const T*								const_pointer;
+	typedef T&										reference;
+	typedef const T&								const_reference;
+	typedef std::size_t								size_type;
+	typedef std::ptrdiff_t							difference_type;
+	typedef RandomAccessIterator<value_type> 		iterator;
+	typedef RandomAccessIterator<const value_type>	const_iterator;
+	typedef ft::reverse_iterator<iterator>			reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
 	// Constructors/Destructor
 	explicit vector (const allocator_type& alloc = allocator_type()) : m_Allocator(alloc)
@@ -251,17 +252,40 @@ public:
 	{
 		return iterator(m_Data);
 	}
+
+	const_iterator begin() const
+	{
+		return const_iterator(m_Data);
+	}
+
 	iterator end()
 	{
 		return iterator(m_Data + m_Size);
 	}
+
+	const_iterator end() const
+	{
+		return const_iterator(m_Data + m_Size);
+	}
+
 	reverse_iterator rbegin()
 	{
 		return reverse_iterator(end());
 	}
+
+	const_reverse_iterator rbegin() const
+	{
+		return const_reverse_iterator(end());
+	}
+
 	reverse_iterator rend()
 	{
 		return reverse_iterator(begin());
+	}
+
+	const_reverse_iterator rend() const
+	{
+		return const_reverse_iterator(begin());
 	}
 
 	template <class InputIterator , class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
@@ -312,8 +336,8 @@ public:
 		size_type index = position - begin();
 		if (m_Size + n >= m_Capacity)
             ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
-		// Moves the elements in the range [first,last) starting from the end into the range terminating at result.
-		std::move_backward(begin() + index , end() , end() + n);
+		// Copies the elements in the range [first,last) starting from the end into the range terminating at result.
+		std::copy_backward(begin() + index , end() , end() + n);
 
 		for(size_type i = index; i < index + n; i++)
 		{
@@ -330,7 +354,7 @@ public:
 		if (m_Size + n >= m_Capacity)
             ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
 
-		std::move_backward(begin() + index , end() , end() + n);
+		std::copy_backward(begin() + index , end() , end() + n);
 
 		for(size_type i = index; i < index + n; i++)
 		{
@@ -366,7 +390,68 @@ public:
 		std::swap(m_Data, x.m_Data);
 	}
 
- private:
+	//Allocator:
+
+	allocator_type get_allocator() const
+	{
+		return m_Allocator;
+	}
+
+	/********Non-member function overloads*******/
+	// relational operators (vector)
+	template <class Tp, class Alloc>
+	friend bool operator== (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		/*The equality comparison (operator==) is performed by first comparing sizes,
+		and if they match, the elements are compared sequentially using operator==,
+		stopping at the first mismatch (as if using algorithm equal). */
+		return (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template <class Tp, class Alloc>
+	friend bool operator!= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator==
+		return !(lhs == rhs);
+	}
+
+	template <class Tp, class Alloc>
+	friend bool operator<  (const vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		return std::lexicographical_compare(lhs.begin(), lhs.end(),
+											rhs.begin(), rhs.end());
+	}
+
+	template <class Tp, class Alloc>
+	friend bool operator<= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator<
+		return !(rhs < lhs);
+	}
+
+	template <class Tp, class Alloc>
+	friend bool operator>  (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		/// Based on operator<
+		return rhs < lhs;
+	}
+
+	template <class Tp, class Alloc>
+	friend bool operator>= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator<
+		return !(lhs < rhs); 
+
+	}
+
+	//swap (vector)
+	template <class Tp, class Alloc>
+	void swap (ft::vector<Tp,Alloc>& x, ft::vector<Tp,Alloc>& y)
+	{
+		x.swap(y);
+	}
+
+private:
 	pointer			m_Data;
 	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
 	size_type		m_Capacity; //how much memory we have allocated
