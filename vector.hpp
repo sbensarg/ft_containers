@@ -35,6 +35,8 @@ public:
 	typedef RandomAccessIterator<value_type>		const_iterator;
 	typedef ft::reverse_iterator<iterator>			reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
+	typedef typename Allocator::template rebind<value_type>::other  alloc_type;
+
 
 	// Constructors/Destructor
 	explicit vector (const allocator_type& alloc = allocator_type()) : m_Allocator(alloc)
@@ -89,13 +91,15 @@ public:
 		this->m_Capacity = x.m_Capacity;
 		m_Data = m_Allocator.allocate(m_Capacity);
 		for(size_type i = 0; i < m_Size; i++)
-			this->m_Data[i] = x.m_Data[i];
+		{
+			m_Allocator.construct(&m_Data[i], x.m_Data[i]);
+		}
 	}
 
 	~vector()
 	{
 		clear();
-		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
+		m_Allocator.deallocate(m_Data, m_Capacity);
 	}
 
 	//Assignment operator
@@ -107,7 +111,7 @@ public:
 		this->m_Capacity = x.m_Capacity;
 		m_Data = m_Allocator.allocate(m_Capacity);
 		for(size_type i = 0; i < m_Size; i++)
-			this->m_Data[i] = x.m_Data[i];
+			m_Allocator.construct(&m_Data[i], x.m_Data[i]);
 		return (*this);
 	}
 
@@ -123,15 +127,20 @@ public:
 		
 		if (n < this->m_Size)
 		{
+			for(size_type i = n - 1; i < m_Size; i++)
+				m_Allocator.destroy(&m_Data[i]);
 			this->m_Size = n;
 		}
 		else if (n > this->m_Size)
 		{
-			if (m_Size >= m_Capacity)
-            	ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
-			while (m_Size < n)
+			m_Capacity = n;
+			size_t bla = m_Size;
+			ReAlloc(m_Capacity);
+			m_Size = n;
+			while (bla < n)
 			{
-				m_Allocator.construct(&	m_Data[m_Size++], val);
+				m_Allocator.construct(&m_Data[bla], val);
+				bla++;
 			}
 		}
 	}
@@ -401,7 +410,7 @@ private:
 	pointer			m_Data;
 	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
 	size_type		m_Capacity; //how much memory we have allocated
-	allocator_type	m_Allocator;
+	alloc_type	m_Allocator;
 
 	void ReAlloc(size_type newCapacity)
 	{
@@ -409,7 +418,7 @@ private:
 		// 2. copy/construct old elements into new block
 		// 3. call destruct the previous one with the destructor
 
-		pointer newBlock = m_Allocator.allocate(newCapacity * sizeof(value_type));
+		pointer newBlock = m_Allocator.allocate(newCapacity);
 		
 		if (newCapacity < m_Size)
 			m_Size = newCapacity;
@@ -418,10 +427,9 @@ private:
 			m_Allocator.construct(&newBlock[i], m_Data[i]);
 
 		for (size_type i = 0; i < m_Size; i++)
-		{
-			m_Data[i].~T();
-		}
-		m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
+			m_Allocator.destroy(&m_Data[i]);
+		
+		m_Allocator.deallocate(m_Data, m_Capacity);
 		m_Data = newBlock;
 		m_Capacity = newCapacity;
 	}

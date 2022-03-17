@@ -60,11 +60,11 @@ public:
 		*a
 		a->m 
 	*/
-	reference operator* () const 
+	reference operator* () 
 	{ 
 		return *_ptr; 
 	}
-	pointer   operator->() const 
+	pointer   operator->() 
 	{ 
 		return  _ptr; 
 	}
