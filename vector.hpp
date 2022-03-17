@@ -32,7 +32,7 @@ public:
 	typedef std::size_t								size_type;
 	typedef std::ptrdiff_t							difference_type;
 	typedef RandomAccessIterator<value_type> 		iterator;
-	typedef RandomAccessIterator<const value_type>	const_iterator;
+	typedef RandomAccessIterator<value_type>		const_iterator;
 	typedef ft::reverse_iterator<iterator>			reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
 
@@ -397,60 +397,6 @@ public:
 		return m_Allocator;
 	}
 
-	/********Non-member function overloads*******/
-	// relational operators (vector)
-	template <class Tp, class Alloc>
-	friend bool operator== (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		/*The equality comparison (operator==) is performed by first comparing sizes,
-		and if they match, the elements are compared sequentially using operator==,
-		stopping at the first mismatch (as if using algorithm equal). */
-		return (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));
-	}
-
-	template <class Tp, class Alloc>
-	friend bool operator!= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		// Based on operator==
-		return !(lhs == rhs);
-	}
-
-	template <class Tp, class Alloc>
-	friend bool operator<  (const vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		return std::lexicographical_compare(lhs.begin(), lhs.end(),
-											rhs.begin(), rhs.end());
-	}
-
-	template <class Tp, class Alloc>
-	friend bool operator<= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		// Based on operator<
-		return !(rhs < lhs);
-	}
-
-	template <class Tp, class Alloc>
-	friend bool operator>  (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		/// Based on operator<
-		return rhs < lhs;
-	}
-
-	template <class Tp, class Alloc>
-	friend bool operator>= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
-	{
-		// Based on operator<
-		return !(lhs < rhs); 
-
-	}
-
-	//swap (vector)
-	template <class Tp, class Alloc>
-	void swap (ft::vector<Tp,Alloc>& x, ft::vector<Tp,Alloc>& y)
-	{
-		x.swap(y);
-	}
-
 private:
 	pointer			m_Data;
 	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
@@ -481,3 +427,57 @@ private:
 	}
 
 };
+
+	/********Non-member function overloads*******/
+	// relational operators (vector)
+	template <class Tp, class Alloc>
+	bool operator== (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		/*The equality comparison (operator==) is performed by first comparing sizes,
+		and if they match, the elements are compared sequentially using operator==,
+		stopping at the first mismatch (as if using algorithm equal). */
+		return (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+	template <class Tp, class Alloc>
+	bool operator!= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator==
+		return !(lhs == rhs);
+	}
+
+	template <class Tp, class Alloc>
+	bool operator<  (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		return std::lexicographical_compare(lhs.begin(), lhs.end(),
+											rhs.begin(), rhs.end());
+	}
+
+	template <class Tp, class Alloc>
+	bool operator<= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator<
+		return !(rhs < lhs);
+	}
+
+	template <class Tp, class Alloc>
+	bool operator>  (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		/// Based on operator<
+		return rhs < lhs;
+	}
+
+	template <class Tp, class Alloc>
+	bool operator>= (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
+	{
+		// Based on operator<
+		return !(lhs < rhs); 
+
+	}
+
+	//swap (vector)
+	template <class Tp, class Alloc>
+	void swap (ft::vector<Tp,Alloc>& x, ft::vector<Tp,Alloc>& y)
+	{
+		x.swap(y);
+	}

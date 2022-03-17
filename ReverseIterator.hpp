@@ -38,11 +38,18 @@ public:
 	{
 		return (_it);
 	}
+	
 	reference operator*() const
 	{
 		iterator_type tmp = _it;
         return (*(--tmp));
 	}
+
+	pointer operator->() const 
+	{
+		return &(operator*());
+	}
+
 	reference operator[] (difference_type n) const
 	{
 		return (base()[-n-1]);

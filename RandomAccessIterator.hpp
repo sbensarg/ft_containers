@@ -176,12 +176,12 @@ public:
 		a += n
 		a -= n
 	*/
-	RandomAccessIterator & operator+=(const difference_type & n)
+	RandomAccessIterator & operator+=(difference_type n)
 	{
 		_ptr += n;
 		return (*this);
 	}
-	RandomAccessIterator & operator-=(const difference_type & n)
+	RandomAccessIterator & operator-=(difference_type n)
 	{
 		_ptr -= n;
 		return (*this);
