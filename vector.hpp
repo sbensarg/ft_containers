@@ -60,9 +60,10 @@ public:
 			m_Allocator.construct(&m_Data[i], val);
 	}
 	// the second template argument is only valid if InputIterator is not an integral type:
-	template <class InputIterator, class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
+	template <class InputIterator>
     vector (InputIterator first, InputIterator last, 
-		const allocator_type& alloc = allocator_type())
+		const allocator_type& alloc = allocator_type()
+		, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = nullptr)
 		: m_Allocator(alloc)
 	{
 		/*Constructs a container with as many elements as the range [first,last),
@@ -294,8 +295,9 @@ public:
 		return const_reverse_iterator(begin());
 	}
 
-	template <class InputIterator , class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
-	void assign (InputIterator first, InputIterator last)
+	template <class InputIterator>
+	void assign (InputIterator first, InputIterator last,
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = nullptr)
 	{
 		// the new contents are elements constructed from each of the elements in the range between first and last, in the same order.
 		clear();
@@ -377,8 +379,9 @@ public:
 		this->m_Size += n;
 	}
 
-	template <class InputIterator,  class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
-    void insert (iterator position, InputIterator first, InputIterator last)
+	template <class InputIterator>
+    void insert (iterator position, InputIterator first, InputIterator last,
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = nullptr)
 	{
 		int index = position - begin();
 		size_type n = last - first;
@@ -400,20 +403,16 @@ public:
 
 	iterator erase (iterator position)
 	{
-		int index = position - begin();
-	//	int tmp = index;
-	//	m_Data[index].~T();
-		//std::cout << "tmp " << tmp << "\n";
-		for (size_type i = index; i < m_Size; i++)
-			m_Data[i] = m_Data[i + 1];
-		this->m_Size--;
+		std::copy(position + 1, end(), position);
+		resize (size() - 1);
 		return position;
 	}
 
 	iterator erase (iterator first, iterator last)
 	{
-		for (iterator i = first; i < last; i++)
-			erase(first);
+		size_type n = last - first;
+		std::copy(last, end(), first);
+		resize(size() - n);
 		return first;
 	}
 
