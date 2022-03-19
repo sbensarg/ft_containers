@@ -1,6 +1,6 @@
 NAME = vector
 SRCS = main.cpp
-FLAGS = -Wall -Wextra -Werror -std=c++11 -fsanitize=address -g
+FLAGS = -Wall -Wextra -Werror -std=c++11 
 CC = c++
 HEADER = vector.hpp iterators_traits.hpp RandomAccessIterator.hpp ReverseIterator.hpp
 all: $(NAME)

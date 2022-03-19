@@ -133,14 +133,11 @@ public:
 		}
 		else if (n > this->m_Size)
 		{
-			m_Capacity = n;
-			size_t bla = m_Size;
-			ReAlloc(m_Capacity);
-			m_Size = n;
-			while (bla < n)
+			if (n >= m_Capacity)
+				ReAlloc(n);
+			while (m_Size < n)
 			{
-				m_Allocator.construct(&m_Data[bla], val);
-				bla++;
+				m_Allocator.construct(&	m_Data[m_Size++], val);
 			}
 		}
 	}
@@ -302,10 +299,24 @@ public:
 	{
 		// the new contents are elements constructed from each of the elements in the range between first and last, in the same order.
 		clear();
-		for( ; first != last; first++)
+		this->m_Size = 0;
+		InputIterator tmp(first);
+		while(tmp != last)
 		{
-			push_back(*first);
+			tmp++;
+			m_Size++;
 		}
+		m_Capacity = m_Size;
+		m_Data = m_Allocator.allocate(m_Capacity);
+		for(size_type i = 0; first != last; first++)
+		{
+			m_Allocator.construct(&m_Data[i], *first);
+			i++;
+		}
+		// for( ; first != last; first++)
+		// {
+		// 	push_back(*first);
+		// }
 	}
 	
 	void assign (size_type n, const value_type& val)
@@ -329,12 +340,15 @@ public:
 		shift all of the elements after that index up one slot in the array, 
 		and then assign the new value to the element at that index. */
 		int index = position - begin();
+		
 		if (m_Size >= m_Capacity)
             ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+	
 		for (int i = this->m_Size - 1; i >= index; --i)
-			m_Data[i + 1] = m_Data[i];
-		
-		m_Data[index] = val;
+		{
+			m_Allocator.construct(&m_Data[i + 1], m_Data[i]);
+		}
+		m_Allocator.construct(&m_Data[index], val);
 		++m_Size;
 		return iterator (m_Data + index);
 		//return (position);
@@ -342,34 +356,45 @@ public:
 
 	void insert (iterator position, size_type n, const value_type& val)
 	{
-		size_type index = position - begin();
-		if (m_Size + n >= m_Capacity)
-            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
-		// Copies the elements in the range [first,last) starting from the end into the range terminating at result.
-		std::copy_backward(begin() + index , end() , end() + n);
-
-		for(size_type i = index; i < index + n; i++)
+		int index = position - begin();
+		// if (m_Size + n >= m_Capacity)
+        //     ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
+		if ((m_Size + n) > m_Capacity)
 		{
-			m_Allocator.construct(&m_Data[i], val);
+			if (n > m_Size)
+				ReAlloc(m_Size + n);
+			else
+				ReAlloc(m_Capacity * 2);
 		}
+		else if (m_Size == 0)
+			ReAlloc(n);
+		// Copies the elements in the range [first,last) starting from the end into the range terminating at result.
+		//std::copy_backward(begin() + index , end() , end() + n);
+		for (int i = m_Size - 1; i >= index; i--)
+			m_Allocator.construct(&m_Data[i + n], m_Data[i]);
+		for (size_type i = 0; i < n; i++)
+			m_Allocator.construct(&m_Data[index++], val);
 		this->m_Size += n;
 	}
 
 	template <class InputIterator,  class = typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type*>
     void insert (iterator position, InputIterator first, InputIterator last)
 	{
-		size_type index = position - begin();
+		int index = position - begin();
 		size_type n = last - first;
-		if (m_Size + n >= m_Capacity)
-            ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
-
-		std::copy_backward(begin() + index , end() , end() + n);
-
-		for(size_type i = index; i < index + n; i++)
+		if ((m_Size + n) > m_Capacity)
 		{
-			m_Allocator.construct(&m_Data[i], *first);
-			first++;
+			if (n > m_Size)
+				ReAlloc(m_Size + n);
+			else
+				ReAlloc(m_Capacity * 2);
 		}
+		else if (m_Size == 0)
+			ReAlloc(n);
+		for (int i = m_Size - 1; i >= index; i--)
+			m_Allocator.construct(&m_Data[i + n], m_Data[i]);
+		for (size_type i = 0; i < n; i++)
+			m_Allocator.construct(&m_Data[index++], *first);
 		this->m_Size += n;
 	}
 
