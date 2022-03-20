@@ -1,5 +1,10 @@
 #include <iostream>
 #include "iterators_traits.hpp"
+#include "enable_if.hpp"
+#include <type_traits>
+#include <new>
+#include <iostream>
+#include <string>
 #pragma once
 template <typename T>
 
@@ -30,12 +35,29 @@ public:
 	{
 		*this = src;
 	}
+
 	RandomAccessIterator & operator=(RandomAccessIterator const & rhs)
 	{
 		this->_ptr = rhs._ptr;
 		return (*this);
 	}
 
+	// template<bool was_const = IsConst, class = ft::enable_if<IsConst || !was_const>>
+    // RandomAccessIterator(RandomAccessIterator<T,was_const>  const & rhs) : _ptr(rhs.getConstPtr()) 
+	// {
+
+	// }
+
+    // template<bool WasConst, class = ft::enable_if<IsConst && !WasConst>>
+    // RandomAccessIterator& operator=(RandomAccessIterator<T,WasConst>const & rhs)
+	// { 
+	// 	this->_ptr = rhs._ptr;
+	// 	return *this;
+	// }
+	// operator RandomAccessIterator<const T>() const {
+    //     // Replace this with however your iterator is constructed
+    //     return RandomAccessIterator()
+    // }
 	~RandomAccessIterator()
 	{
 
@@ -54,7 +76,6 @@ public:
 	{ 
 		return this->_ptr != it._ptr; 
 	}
-
 	/* 
 		Can be dereferenced as an rvalue (if in a dereferenceable state).
 		*a
@@ -194,8 +215,15 @@ public:
 	{
 		return (_ptr[n]);
 	}
+	pointer getPtr() const
+	{
+		return _ptr;
+	}
+	const pointer getConstPtr() const
+	{
+		return (_ptr);
+	}
+	
 private:
-
 		T* _ptr;
-		
 };

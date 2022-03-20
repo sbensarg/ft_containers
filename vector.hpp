@@ -3,6 +3,8 @@
 #include "ReverseIterator.hpp"
 #include "enable_if.hpp"
 #include "is_integral.hpp"
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
 #include <stdexcept>
 #include <algorithm>
 #pragma once
@@ -23,19 +25,19 @@ class ft::vector
 {
 public:
 	// Attributes
-	typedef T										value_type;
-	typedef Allocator								allocator_type;
-	typedef T*										pointer;
-	typedef const T*								const_pointer;
-	typedef T&										reference;
-	typedef const T&								const_reference;
-	typedef std::size_t								size_type;
-	typedef std::ptrdiff_t							difference_type;
-	typedef RandomAccessIterator<value_type> 		iterator;
-	typedef RandomAccessIterator<value_type>		const_iterator;
-	typedef ft::reverse_iterator<iterator>			reverse_iterator;
-	typedef ft::reverse_iterator<const_iterator>	const_reverse_iterator;
-	typedef typename Allocator::template rebind<value_type>::other  alloc_type;
+	typedef T														value_type;
+	typedef Allocator												allocator_type;
+	typedef T*														pointer;
+	typedef const T*												const_pointer;
+	typedef T&														reference;
+	typedef const T&												const_reference;
+	typedef std::size_t												size_type;
+	typedef std::ptrdiff_t											difference_type;
+	typedef RandomAccessIterator<value_type> 						iterator;
+	typedef RandomAccessIterator<value_type>						const_iterator;
+	typedef ft::reverse_iterator<iterator>							reverse_iterator;
+	typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+	typedef typename Allocator::template rebind<value_type>::other	alloc_type;
 
 
 	// Constructors/Destructor
@@ -46,7 +48,6 @@ public:
 		this->m_Capacity = 0;
 		m_Data = m_Allocator.allocate(m_Capacity);
 	}
-
 
 	explicit vector (size_type n, const value_type& val = value_type(),
 		const allocator_type& alloc = allocator_type()) 
@@ -59,6 +60,7 @@ public:
 		for(size_type i = 0; i < m_Size; i++)
 			m_Allocator.construct(&m_Data[i], val);
 	}
+
 	// the second template argument is only valid if InputIterator is not an integral type:
 	template <class InputIterator>
     vector (InputIterator first, InputIterator last, 
@@ -84,6 +86,7 @@ public:
 			i++;
 		}
 	}
+
 	vector (const vector& x)
 	{
 		//Constructs a container with a copy of each of the elements in x, in the same order.
@@ -301,7 +304,6 @@ public:
 	{
 		// the new contents are elements constructed from each of the elements in the range between first and last, in the same order.
 		clear();
-		this->m_Size = 0;
 		InputIterator tmp(first);
 		while(tmp != last)
 		{
@@ -315,10 +317,6 @@ public:
 			m_Allocator.construct(&m_Data[i], *first);
 			i++;
 		}
-		// for( ; first != last; first++)
-		// {
-		// 	push_back(*first);
-		// }
 	}
 	
 	void assign (size_type n, const value_type& val)
@@ -359,8 +357,6 @@ public:
 	void insert (iterator position, size_type n, const value_type& val)
 	{
 		int index = position - begin();
-		// if (m_Size + n >= m_Capacity)
-        //     ReAlloc(!m_Capacity ? 1 : m_Capacity * 2);
 		if ((m_Size + n) > m_Capacity)
 		{
 			if (n > m_Size)
@@ -370,8 +366,6 @@ public:
 		}
 		else if (m_Size == 0)
 			ReAlloc(n);
-		// Copies the elements in the range [first,last) starting from the end into the range terminating at result.
-		//std::copy_backward(begin() + index , end() , end() + n);
 		for (int i = m_Size - 1; i >= index; i--)
 			m_Allocator.construct(&m_Data[i + n], m_Data[i]);
 		for (size_type i = 0; i < n; i++)
@@ -432,9 +426,9 @@ public:
 
 private:
 	pointer			m_Data;
-	size_type		m_Size; // nbr of element inside the vector, keep track of how many element we have
-	size_type		m_Capacity; //how much memory we have allocated
-	alloc_type	m_Allocator;
+	size_type		m_Size; 	// nbr of element inside the vector, keep track of how many element we have
+	size_type		m_Capacity;	//how much memory we have allocated
+	alloc_type		m_Allocator;
 
 	void ReAlloc(size_type newCapacity)
 	{
@@ -468,7 +462,7 @@ private:
 		/*The equality comparison (operator==) is performed by first comparing sizes,
 		and if they match, the elements are compared sequentially using operator==,
 		stopping at the first mismatch (as if using algorithm equal). */
-		return (lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin()));
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 	}
 
 	template <class Tp, class Alloc>
@@ -481,7 +475,7 @@ private:
 	template <class Tp, class Alloc>
 	bool operator<  (const ft::vector<Tp,Alloc>& lhs, const ft::vector<Tp,Alloc>& rhs)
 	{
-		return std::lexicographical_compare(lhs.begin(), lhs.end(),
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(),
 											rhs.begin(), rhs.end());
 	}
 

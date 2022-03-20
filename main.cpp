@@ -7,6 +7,7 @@
 #include <typeinfo>     // typeid
 #include "is_integral.hpp"
 #include "enable_if.hpp"
+#include "lexicographical_compare.hpp"
 #include <iomanip> 
 #define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
 
@@ -35,7 +36,9 @@ typename ft::enable_if<std::is_integral<T>::value,bool>::type
 template < class T,
            class = typename ft::enable_if<std::is_integral<T>::value>::type>
 bool is_even (T i) {return !bool(i%2);}
-
+// a case-insensitive comparison function:
+bool mycomp (char c1, char c2)
+{ return std::tolower(c1)<std::tolower(c2); }
 void vector_tests(void)
 {
     std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
@@ -2618,5 +2621,23 @@ int main()
 		std::cout << "myvector has " << (until-from) << " elements.\n";
 	}
 	vector_tests();
+	{
+		// lexicographical_compare test
+		char foo[]="Apple";
+		char bar[]="apartment";
+
+		std::cout << std::boolalpha;
+
+		std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
+
+		std::cout << "Using default comparison (operator<): ";
+		std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
+		std::cout << '\n';
+
+		std::cout << "Using mycomp as comparison object: ";
+		std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
+		std::cout << '\n';
+	}
+	
     return 0;
 }
