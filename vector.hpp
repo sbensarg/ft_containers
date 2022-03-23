@@ -34,7 +34,7 @@ public:
 	typedef std::size_t												size_type;
 	typedef std::ptrdiff_t											difference_type;
 	typedef RandomAccessIterator<value_type> 						iterator;
-	typedef RandomAccessIterator<value_type>						const_iterator;
+	typedef RandomAccessIterator<const value_type>					const_iterator;
 	typedef ft::reverse_iterator<iterator>							reverse_iterator;
 	typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
 	typedef typename Allocator::template rebind<value_type>::other	alloc_type;
@@ -326,11 +326,16 @@ public:
 		{
 			m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
 			m_Data = m_Allocator.allocate(n);
-			this->m_Capacity = n;
+			if(m_Capacity < m_Size)
+			{
+				this->m_Capacity = n;
+			}
 		}
 		this->m_Size = n;
 		for(size_type i = 0; i < m_Size; i++)
 			m_Allocator.construct(&m_Data[i], val);
+		if (m_Capacity < m_Size)
+			m_Capacity = m_Size;
 	}
 
 	iterator insert (iterator position, const value_type& val)

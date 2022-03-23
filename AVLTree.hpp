@@ -3,15 +3,26 @@
 #include <string>
 #include "Tree.hpp"
 #include "Node.hpp"
-
+#define spaces 5
 
 template <typename T>
 class AVLTree : public Tree<T>
 {
-private:
+public:
 	Node<T> *root; // access the whole tree
 
-
+	void printtree(Node<T> *pt, int sp)
+	{
+		if (sp == 0)
+			sp = spaces;
+		if (pt != NULL)
+		{
+			printtree(pt->getRightChild(), sp + 10);
+			printf("%*d\n\n\n", sp, pt->getData());
+			printtree(pt->getLeftChild(), sp + 10);
+		}
+	}
+private:
 	void traverseInOrder(Node<T> *node)
 	{
 		// left subtree -> root -> right subtree
@@ -115,6 +126,23 @@ public:
 	void del(T data)
 	{
 		root = del(data, root);
+	}
+
+	// Print the tree
+	void printTree(Node<T> *root, std::string indent, bool last) {
+	if (root != nullptr) {
+		std::cout << indent;
+		if (last) {
+		std::cout << "R----";
+		indent += "   ";
+		} else {
+		std::cout << "L----";
+		indent += "|  ";
+		}
+		std::cout << root->getData() << std::endl;
+		printTree(root->getLeftChild(), indent, false);
+		printTree(root->getRightChild(), indent, true);
+	}
 	}
 };
 

@@ -16,6 +16,7 @@ public:
 	typedef typename ft::iterator_traits<T*>::pointer			pointer;
 	typedef typename ft::iterator_traits<T*>::difference_type	difference_type;
 	typedef typename ft::iterator_traits<T*>::iterator_category	iterator_category;
+	typedef RandomAccessIterator<const T>						const_iterator;		
 
 	/*
 		Is default-constructible, copy-constructible, copy-assignable and destructible
@@ -23,6 +24,11 @@ public:
 		X b(a);
 		b = a;
 	*/
+	operator const_iterator()
+	{
+		return (const_iterator(_ptr));
+	}
+
 	RandomAccessIterator(void) : _ptr(NULL)
 	{
 
@@ -54,10 +60,7 @@ public:
 	// 	this->_ptr = rhs._ptr;
 	// 	return *this;
 	// }
-	// operator RandomAccessIterator<const T>() const {
-    //     // Replace this with however your iterator is constructed
-    //     return RandomAccessIterator()
-    // }
+	
 	~RandomAccessIterator()
 	{
 
