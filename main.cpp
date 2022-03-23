@@ -9,6 +9,8 @@
 #include "enable_if.hpp"
 #include "lexicographical_compare.hpp"
 #include <iomanip> 
+#include "AVLTree.hpp"
+
 #define EQUAL(x) ((x) ? (std::cout << "\033[1;32mAC\033[0m\n") : (std::cout << "\033[1;31mWA\033[0m\n"))
 
 
@@ -33,9 +35,9 @@ typename ft::enable_if<std::is_integral<T>::value,bool>::type
   is_odd (T i) {return bool(i%2);}
 
 // 2. the second template argument is only valid if T is an integral type:
-template < class T,
-           class = typename ft::enable_if<std::is_integral<T>::value>::type>
-bool is_even (T i) {return !bool(i%2);}
+// template < class T,
+//            class = typename ft::enable_if<std::is_integral<T>::value>::type>
+// bool is_even (T i) {return !bool(i%2);}
 // a case-insensitive comparison function:
 bool mycomp (char c1, char c2)
 { return std::tolower(c1)<std::tolower(c2); }
@@ -2637,6 +2639,18 @@ int main()
 		std::cout << "Using mycomp as comparison object: ";
 		std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
 		std::cout << '\n';
+	}
+
+	{
+		//test bst 
+		AVLTree<std::string> a;
+		a.insert("11");
+		a.insert("32");
+		a.insert("54");
+		a.insert("77");
+		a.insert("88");
+		a.insert("8");
+		a.traverse();
 	}
 	
     return 0;
