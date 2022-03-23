@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <algorithm>    // std::max
 #include "Tree.hpp"
 #include "Node.hpp"
+
 #define spaces 5
 
 template <typename T>
@@ -34,6 +36,68 @@ private:
 		}
 	}
 
+	int height(Node<T> *node)
+	{
+		return node != NULL ? node->getHeight() : 0;
+	}
+
+	Node<T>* rotateRight(Node<T> *node)
+	{
+		Node<T>* leftNode = node->getLeftChild();
+		Node<T>* centreNode= leftNode->getRightChild();
+		leftNode->SetRightChild(node);
+		node->SetLeftChild(centreNode);
+		updateHeight(node);
+		updateHeight(leftNode);
+		return leftNode;
+	}
+
+	Node<T>* rotateLeft(Node<T> *node)
+	{
+		Node<T>* rightNode = node->getRightChild();
+		Node<T>* centreNode= rightNode->getLeftChild();
+		rightNode->SetLeftChild(node);
+		node->SetRightChild(centreNode);
+		updateHeight(node);
+		updateHeight(rightNode);
+		return rightNode;
+	}
+	int balance(Node<T> *node) {
+        return node != NULL ? height(node->getLeftChild()) - height(node->getRightChild()) : 0;
+    }
+
+	Node<T>* applyRotation(Node<T> *node)
+	{
+		int balanceFactor = balance(node);
+		if (balanceFactor > 1)
+		{
+			// left-heavy
+			if (balance(node->getLeftChild()) < 0)
+			{
+				node->SetLeftChild(rotateLeft(node->getLeftChild()));
+			}
+			return rotateRight(node);
+		}
+		if (balanceFactor < -1)
+		{
+			//right-heavy
+			if (balance(node->getRightChild()) < 0)
+			{
+				node->SetRightChild(rotateRight(node->getRightChild()));
+			}
+			return rotateLeft(node);
+		}
+		return node;
+	}
+
+	void updateHeight(Node<T> *node)
+	{
+		int maxHeight = std::max(
+			height(node->getLeftChild()),
+			height(node->getRightChild())
+		);
+		node->SetHeight(maxHeight + 1);
+	}
 
 	Node<T>* insert(T data, Node<T> *node)
 	{
@@ -43,7 +107,10 @@ private:
 			node->SetLeftChild(insert(data, node->getLeftChild()));
 		else if (data > node->getData())
 			node->SetRightChild(insert(data, node->getRightChild()));
-		return node;
+		else
+			return node;
+		updateHeight(node);
+		return applyRotation(node);
 	}
 
 	Node<T> *del (T data, Node<T> *node)
@@ -75,7 +142,8 @@ private:
 			node->SetData(bla); // predecessor
 			node->SetLeftChild(del(node->getData(), node->getLeftChild()));
 		}
-		return NULL;
+		updateHeight(node);
+		return applyRotation(node);
 	}
 
 	T getMax(Node<T> *node) {

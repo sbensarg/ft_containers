@@ -2641,31 +2641,31 @@ int main()
 	// 	std::cout << '\n';
 	// }
 
-	// {
-	// 	//test bst 
-	// 	AVLTree<int> a;
-	// 	a.insert(11);
-	// 	a.insert(10);
-	// 	a.insert(9);
-	// 	a.insert(8);
-	// 	a.insert(12);
-	// 	a.insert(13);
-	// 	a.insert(14);
-	// 	a.traverse();
-	// 	a.printtree(a.root, 0);
-	// 	a.printTree(a.root, "", true);
-	// }
 	{
-		std::vector<int> a(70, 70);
-		a.clear();
-		a.assign(5, 0);
-		std::cout << " c ==> " << a.capacity() << "\n";
-
-		ft::vector<int> b(70, 70);
-		b.clear();
-		b.assign(5, 0);
-		std::cout << "b c ==> " << b.capacity() << "\n";
-
+		//test bst 
+		AVLTree<int> a;
+		a.insert(11);
+		a.insert(10);
+		a.insert(9);
+		a.insert(8);
+		a.insert(12);
+		a.insert(13);
+		a.insert(14);
+		a.traverse();
+		a.printtree(a.root, 0);
+		a.printTree(a.root, "", true);
 	}
+	// {
+	// 	std::vector<int> a(70, 70);
+	// 	a.clear();
+	// 	a.assign(5, 0);
+	// 	std::cout << " c ==> " << a.capacity() << "\n";
+
+	// 	ft::vector<int> b(70, 70);
+	// 	b.clear();
+	// 	b.assign(5, 0);
+	// 	std::cout << "b c ==> " << b.capacity() << "\n";
+
+	// }
     return 0;
 }
