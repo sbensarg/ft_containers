@@ -2,7 +2,7 @@ NAME = vector
 SRCS = main.cpp
 FLAGS = -Wall -Wextra -Werror 
 CC = c++
-HEADER = vector.hpp iterators_traits.hpp RandomAccessIterator.hpp ReverseIterator.hpp
+HEADER = vector.hpp iterators_traits.hpp RandomAccessIterator.hpp ReverseIterator.hpp Node.hpp Tree.hpp AVLTree.hpp
 all: $(NAME)
 
 $(NAME): $(SRCS) $(HEADER)

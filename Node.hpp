@@ -39,4 +39,13 @@ class Node
 		void SetLeftChild(Node<T> *l) {
 			this->leftChild = l;
 		}
+
+		bool operator<(const Node<T> & other_it) const
+		{
+			return (data < other_it.data);
+		}
+		bool operator>(const  Node<T> & other_it) const
+		{
+			return (data > other_it.data);
+		}
 };

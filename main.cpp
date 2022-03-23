@@ -2643,13 +2643,18 @@ int main()
 
 	{
 		//test bst 
-		AVLTree<std::string> a;
-		a.insert("11");
-		a.insert("32");
-		a.insert("54");
-		a.insert("77");
-		a.insert("88");
-		a.insert("8");
+		AVLTree<int> a;
+		a.insert(11);
+		a.insert(32);
+        a.insert(6);
+		a.insert(44);
+        a.insert(18);
+		a.insert(33);
+        a.insert(98);
+		a.insert(23);
+        a.insert(16);
+		a.insert(77);
+        a.insert(50);
 		a.traverse();
 	}
 	

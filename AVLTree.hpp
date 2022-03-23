@@ -18,19 +18,19 @@ private:
 		if (node != NULL)
 		{
 			traverseInOrder(node->getLeftChild());
-			std::cout << node;
+			std::cout << node->getData() << "\n";
 			traverseInOrder(node->getRightChild());
 		}
 	}
 
-		Node<T>* insert(T data, Node<T> *node)
+
+	Node<T>* insert(T data, Node<T> *node)
 	{
 		if (node == NULL)
 			return new Node<T>(data);
-		
-		if (data.compare(node->getData()) < 0)
+		if (data < node->getData())
 			node->SetLeftChild(insert(data, node->getLeftChild()));
-		else if (data.compare(node->getData()) > 0)
+		else if (data > node->getData())
 			node->SetRightChild(insert(data, node->getRightChild()));
 		return node;
 	}
@@ -40,11 +40,11 @@ private:
 		if (node == NULL)
 			return NULL;
 		// keep searching
-		if (data.compare(node->getData()) < 0)
+		if (data > node->getData())
 		{
 			node->SetLeftChild(del(data, node->getLeftChild()));
 		}
-		else if (data.compare(node->getData()) > 0)
+		else if (data < node->getData())
 		{
 			node->SetRightChild(del(data, node->getRightChild()));
 		}
@@ -67,8 +67,21 @@ private:
 		return NULL;
 	}
 
+	T getMax(Node<T> *node) {
+        if (node->getRightChild() != NULL) {
+            return getMax(node->getRightChild());
+        }
+        return node->getData();
+    }
+	T getMin(Node<T> *node) {
+        if (node->getLeftChild() != NULL) {
+            return getMin(node->getLeftChild());
+        }
+        return node->getData();
+    }
+
 public:
-	
+
 	bool isEmpty()
 	{
 		return root == NULL;
@@ -76,42 +89,17 @@ public:
 	
 	T getMax() {
         if (isEmpty()) {
-            return NULL;
+            return 0;
         }
         return getMax(root);
     }
 
-    T getMax(Node<T> node) {
-        if (node.getRightChild() != NULL) {
-            return getMax(node.getRightChild());
+	T getMin() {
+        if (isEmpty()) {
+            return 0;
         }
-        return node.getData();
+        return getMin(root);
     }
-
-	T getMin()
-	{
-		if (isEmpty())
-			return NULL;
-
-		Node<T> *node = root;
-		while (node->getLeftChild() != NULL)
-		{
-			node = node->getLeftChild();	
-		}
-		return node->getData();
-	}
-
-	T getMax(Node<T> *node)
-	{
-		if (isEmpty())
-			return NULL;
-
-		while (node->getRightChild() != NULL)
-		{
-			node = node->getRightChild();	
-		}
-		return node->getData();
-	}
 
 	void traverse()
 	{
