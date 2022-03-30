@@ -2,71 +2,186 @@
 #include <iostream>
 #include <string>
 #include <algorithm>    // std::max
-#include "Tree.hpp"
-#include "Node.hpp"
+#include "pair.hpp"
 
 #define spaces 5
-
 template <typename T>
-class AVLTree : public Tree<T>
+class Node
+{
+	public:
+		T data;
+		Node<T> *parent;
+		Node<T> *leftChild;
+		Node<T> *rightChild;
+		int height;
+	public:
+		typedef T		value_t;
+        typedef Node<T>	node;
+		Node() : parent(NULL), leftChild(NULL), rightChild(NULL), data(value_t()) {}
+		Node(value_t d) : height(1), data(d), parent(NULL), leftChild(NULL), rightChild(NULL) {}
+		Node (const Node &src) : height(src.height), data(src.data), parent(src.parent), leftChild(src.leftChild), rightChild(src.rightChild) {}  
+
+		//getters
+		value_t getData() const {
+			return this->data;
+		}
+
+		node *getRightChild() const {
+			return this->rightChild;
+		}
+		
+		node *getLeftChild() const {
+			return this->leftChild;
+		}
+
+		node *getParent() const {
+			return this->parent;
+		}
+
+		int getHeight() const {
+			return this->height;
+		}
+		//setters
+		void SetData(value_t d) {
+			this->data = d;
+		}
+
+		void SetParent(node *p) {
+			this->parent = p;
+		}
+
+		void SetRightChild(node *r) {
+			this->rightChild = r;
+		}
+
+		void SetLeftChild(node *l) {
+			this->leftChild = l;
+		}
+
+		void SetHeight(int h) {
+			this->height = h;
+		}
+
+		bool operator<(const node & other_it) const
+		{
+			return (data < other_it.data);
+		}
+		bool operator>(const  node & other_it) const
+		{
+			return (data > other_it.data);
+		}
+};
+
+
+template <typename F, typename S, typename key_comp, typename Alloc>
+class AVLTree
 {
 public:
-	Node<T> *root; // access the whole tree
+	typedef ft::pair<const F, S> value_t;
+    typedef Node<value_t> tree_s;
+    typedef typename Alloc::template rebind<Node<value_t> >::other  alloc_type;
 
-	void printtree(Node<T> *pt, int sp)
+	alloc_type alloc;
+	key_comp comp;
+	tree_s *root;
+	tree_s *last_elem;
+	size_t nbrofnodes;
+	
+	AVLTree(): root(NULL), nbrofnodes(0)
+	{
+		this->last_elem = alloc.allocate(1);
+	}
+
+	AVLTree(const AVLTree &c)
+	{
+		this->alloc=c.alloc;
+		this->comp = c.comp;
+		this->nbrofnodes = c.nbrofnodes;
+		this->root = copy_tree(c.root, NULL);
+		this->last_elem = alloc.allocate(1);
+		if (this->root != NULL)
+            this->last_elem->parent = mostright(this->root);
+	}
+	
+	tree_s *copy_tree(tree_s *c, tree_s *par)
+	{
+		if (c == NULL)
+			return (NULL);
+		tree_s *ret = this->alloc.allocate(1);
+		this->alloc.construct(ret, tree_s(*c));
+		ret->parent = par;
+		ret->l = copy_tree(c->l, ret);
+		ret->r = copy_tree(c->r, ret);
+		return (ret);
+	}
+
+
+	void setParent(tree_s *n, tree_s *p)
+	{
+		if (n == NULL)
+			return ;
+		setParent(n->getRightChild(), n);
+		n->parent = p;
+		setParent(n->getLeftChild(), n);
+	}
+
+	void printtree(tree_s *pt, int sp)
 	{
 		if (sp == 0)
 			sp = spaces;
 		if (pt != NULL)
 		{
 			printtree(pt->getRightChild(), sp + 10);
-			printf("%*d\n\n\n", sp, pt->getData());
+			printf("%*d\n\n\n", sp, pt->getData().first);
 			printtree(pt->getLeftChild(), sp + 10);
 		}
 	}
-private:
-	void traverseInOrder(Node<T> *node)
+
+	void traverseInOrder(tree_s *node)
 	{
 		// left subtree -> root -> right subtree
 		if (node != NULL)
 		{
 			traverseInOrder(node->getLeftChild());
-			std::cout << node->getData() << "\n";
+			std::cout << node->getData().first << "\n";
 			traverseInOrder(node->getRightChild());
 		}
 	}
 
-	int height(Node<T> *node)
+	int height(tree_s *node)
 	{
 		return node != NULL ? node->getHeight() : 0;
 	}
 
-	Node<T>* rotateRight(Node<T> *node)
+	tree_s* rotateRight(tree_s *node)
 	{
-		Node<T>* leftNode = node->getLeftChild();
-		Node<T>* centreNode= leftNode->getRightChild();
+		tree_s* leftNode = node->getLeftChild();
+		tree_s* centreNode = leftNode->getRightChild();
 		leftNode->SetRightChild(node);
 		node->SetLeftChild(centreNode);
+		setParent(leftNode, node->parent); // set parent of the new node with the previous node parent
 		updateHeight(node);
 		updateHeight(leftNode);
 		return leftNode;
 	}
 
-	Node<T>* rotateLeft(Node<T> *node)
+	tree_s* rotateLeft(tree_s *node)
 	{
-		Node<T>* rightNode = node->getRightChild();
-		Node<T>* centreNode= rightNode->getLeftChild();
+		tree_s* rightNode = node->getRightChild();
+		tree_s* centreNode = rightNode->getLeftChild();
 		rightNode->SetLeftChild(node);
 		node->SetRightChild(centreNode);
+		setParent(rightNode, node->parent); // set parent of the new node with the previous node parent
 		updateHeight(node);
 		updateHeight(rightNode);
 		return rightNode;
 	}
-	int balance(Node<T> *node) {
+
+	int balance(tree_s *node) {
         return node != NULL ? height(node->getLeftChild()) - height(node->getRightChild()) : 0;
     }
 
-	Node<T>* applyRotation(Node<T> *node)
+	tree_s* applyRotation(tree_s *node)
 	{
 		int balanceFactor = balance(node);
 		if (balanceFactor > 1)
@@ -81,16 +196,17 @@ private:
 		if (balanceFactor < -1)
 		{
 			//right-heavy
-			if (balance(node->getRightChild()) < 0)
+			if (balance(node->getRightChild()) > 0)
 			{
 				node->SetRightChild(rotateRight(node->getRightChild()));
 			}
 			return rotateLeft(node);
 		}
+		this->last_elem->parent = mostright(this->root);
 		return node;
 	}
 
-	void updateHeight(Node<T> *node)
+	void updateHeight(tree_s *node)
 	{
 		int maxHeight = std::max(
 			height(node->getLeftChild()),
@@ -99,21 +215,44 @@ private:
 		node->SetHeight(maxHeight + 1);
 	}
 
-	Node<T>* insert(T data, Node<T> *node)
+	// tree_s* insert(T data,tree_s *node)
+	// {
+	// 	if (node == NULL)
+	// 		return new tree(data);
+	// 	if (data < node->getData())
+	// 		node->SetLeftChild(insert(data, node->getLeftChild()));
+	// 	else if (data > node->getData())
+	// 		node->SetRightChild(insert(data, node->getRightChild()));
+	// 	else
+	// 		return node;
+	// 	updateHeight(node);
+	// 	return applyRotation(node);
+	// }
+
+	tree_s* inser(value_t data,tree_s *node, tree_s* pa)
 	{
 		if (node == NULL)
-			return new Node<T>(data);
-		if (data < node->getData())
-			node->SetLeftChild(insert(data, node->getLeftChild()));
-		else if (data > node->getData())
-			node->SetRightChild(insert(data, node->getRightChild()));
+		{
+			node = alloc.allocate(1);
+			alloc.construct(node, data);
+			node->height = 1;
+			node->parent = pa;
+			this->nbrofnodes++;
+			return NULL;
+		}
+		if (data.first == node->getData().first)
+			return NULL;
+		if (!comp(node->getData().first, data.first)) // operator < 
+			node->SetLeftChild(inser(data, node->getLeftChild(), node));
+		else if (!comp(data.first, node->getData().first))
+			node->SetRightChild(inser(data, node->getRightChild(), node));
 		else
 			return node;
 		updateHeight(node);
 		return applyRotation(node);
 	}
 
-	Node<T> *del (T data, Node<T> *node)
+	tree_s *del (value_t data, tree_s *node)
 	{
 		if (node == NULL)
 			return NULL;
@@ -138,7 +277,7 @@ private:
 				return node->getLeftChild();
 			}
 			// Two Children
-			T bla = getMax(node->getLeftChild());
+			value_t bla = getMax(node->getLeftChild());
 			node->SetData(bla); // predecessor
 			node->SetLeftChild(del(node->getData(), node->getLeftChild()));
 		}
@@ -146,58 +285,74 @@ private:
 		return applyRotation(node);
 	}
 
-	T getMax(Node<T> *node) {
-        if (node->getRightChild() != NULL) {
-            return getMax(node->getRightChild());
-        }
-        return node->getData();
-    }
-	T getMin(Node<T> *node) {
-        if (node->getLeftChild() != NULL) {
-            return getMin(node->getLeftChild());
-        }
-        return node->getData();
-    }
+	// tree_s* getMax(tree_s *node) {
+    //     if (node->getRightChild() != NULL) {
+    //         return getMax(node->getRightChild());
+    //     }
+    //     return node;
+    // }
+	// tree_s* getMin(tree_s *node) {
+    //     if (node->getLeftChild() != NULL) {
+    //         return getMin(node->getLeftChild());
+    //     }
+    //     return node;
+    // }
 
-public:
+	tree_s *mostleft(tree_s *s)
+	{
+		if (s == NULL)
+			return (s);
+		while (s->getLeftChild() != NULL)
+			s = s->getLeftChild();
+		return (s);
+	}
+
+	tree_s *mostright(tree_s *s)
+	{
+		if (s == NULL)
+			return (s);
+		while (s->getRightChild() != NULL)
+			s = s->getRightChild();
+		return (s);
+	}
 
 	bool isEmpty()
 	{
 		return root == NULL;
 	}
 	
-	T getMax() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return getMax(root);
-    }
+	// tree_s* getMax() {
+    //     if (isEmpty()) {	
+    //         return 0;
+    //     }
+    //     return getMax(root);
+    // }
 
-	T getMin() {
-        if (isEmpty()) {
-            return 0;
-        }
-        return getMin(root);
-    }
+	// value_t getMin() {
+    //     if (isEmpty()) {
+    //         return 0;
+    //     }
+    //     return getMin(root);
+    // }
 
 	void traverse()
 	{
 		traverseInOrder(root);
 	}
 
-	Tree<T> *insert(T data)
+	tree_s *insert(value_t data)
 	{
-		root = insert(data, root);
-		return this;
+		root = inser(data, root, NULL);
+		return this->root;
 	}
 
-	void del(T data)
+	void del(value_t data)
 	{
 		root = del(data, root);
 	}
 
 	// Print the tree
-	void printTree(Node<T> *root, std::string indent, bool last) {
+	void printTree(tree_s *root, std::string indent, bool last) {
 	if (root != nullptr) {
 		std::cout << indent;
 		if (last) {
@@ -207,7 +362,7 @@ public:
 		std::cout << "L----";
 		indent += "|  ";
 		}
-		std::cout << root->getData() << std::endl;
+		std::cout << root->getData().first << std::endl;
 		printTree(root->getLeftChild(), indent, false);
 		printTree(root->getRightChild(), indent, true);
 	}

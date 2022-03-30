@@ -41,6 +41,14 @@ typename ft::enable_if<std::is_integral<T>::value,bool>::type
 // a case-insensitive comparison function:
 bool mycomp (char c1, char c2)
 { return std::tolower(c1)<std::tolower(c2); }
+
+bool fncomp (char lhs, char rhs) {return lhs<rhs;}
+
+struct classcomp {
+  bool operator() (const char& lhs, const char& rhs) const
+  {return lhs<rhs;}
+};
+
 void vector_tests(void)
 {
     std::cout << "\033[1;36m<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< vector tests >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\033[0m\n\n";
@@ -2643,16 +2651,14 @@ int main()
 
 	{
 		//test bst 
-		AVLTree<int> a;
-		a.insert(11);
-		a.insert(10);
-		a.insert(9);
-		a.insert(8);
-		a.insert(12);
-		a.insert(13);
-		a.insert(14);
+        // default allocator for ints
+        typedef std::allocator<int> alloc;
+		AVLTree<int, int, classcomp, alloc> a;
+		a.insert(ft::pair<char,int>('a',100));
+		a.insert(ft::pair<char,int>('z',200));
+		a.insert(ft::pair<char,int>('d',500));
 		a.traverse();
-		a.printtree(a.root, 0);
+		a.printtree(a.root, 0); 
 		a.printTree(a.root, "", true);
 	}
 	// {

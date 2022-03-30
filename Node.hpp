@@ -6,44 +6,51 @@ class Node
 {
 	public:
 		T data;
+		Node<T> *parent;
 		Node<T> *leftChild;
 		Node<T> *rightChild;
 		int height;
 	public:
+		typedef T		value_t;
+        typedef Node<T>	node;
+		Node() : parent(NULL), leftChild(NULL), rightChild(NULL), data(value_t()) {}
+		Node(value_t d) : height(1), data(d), parent(NULL), leftChild(NULL), rightChild(NULL) {}
+		Node (const Node &src) : height(src.height), data(src.data), parent(src.parent), leftChild(src.leftChild), rightChild(src.rightChild) {}  
+
 		//getters
-		Node(T d)
-		{
-			this->height = 1;
-			this->data = d;
-			this->leftChild = NULL;
-			this->rightChild = NULL;
-		}
-		
-		T getData() const {
+		value_t getData() const {
 			return this->data;
 		}
 
-		Node<T>	*getRightChild() const {
+		node *getRightChild() const {
 			return this->rightChild;
 		}
 		
-		Node<T> *getLeftChild() const {
+		node *getLeftChild() const {
 			return this->leftChild;
+		}
+
+		node *getParent() const {
+			return this->parent;
 		}
 
 		int getHeight() const {
 			return this->height;
 		}
 		//setters
-		void SetData(T d) {
+		void SetData(value_t d) {
 			this->data = d;
 		}
 
-		void SetRightChild(Node<T> *r) {
+		void SetParent(node *p) {
+			this->parent = p;
+		}
+
+		void SetRightChild(node *r) {
 			this->rightChild = r;
 		}
 
-		void SetLeftChild(Node<T> *l) {
+		void SetLeftChild(node *l) {
 			this->leftChild = l;
 		}
 
@@ -51,11 +58,11 @@ class Node
 			this->height = h;
 		}
 
-		bool operator<(const Node<T> & other_it) const
+		bool operator<(const node & other_it) const
 		{
 			return (data < other_it.data);
 		}
-		bool operator>(const  Node<T> & other_it) const
+		bool operator>(const  node & other_it) const
 		{
 			return (data > other_it.data);
 		}
