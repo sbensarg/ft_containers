@@ -61,15 +61,6 @@ class Node
 		void SetHeight(int h) {
 			this->height = h;
 		}
-
-		bool operator<(const node & other_it) const
-		{
-			return (data < other_it.data);
-		}
-		bool operator>(const  node & other_it) const
-		{
-			return (data > other_it.data);
-		}
 };
 
 
@@ -230,27 +221,25 @@ public:
 	// }
 
 	tree_s* inser(value_t data,tree_s *node, tree_s* pa)
-	{
-		if (node == NULL)
-		{
-			node = alloc.allocate(1);
-			alloc.construct(node, data);
-			node->height = 1;
-			node->parent = pa;
-			this->nbrofnodes++;
-			return NULL;
-		}
-		if (data.first == node->getData().first)
-			return NULL;
-		if (!comp(node->getData().first, data.first)) // operator < 
-			node->SetLeftChild(inser(data, node->getLeftChild(), node));
-		else if (!comp(data.first, node->getData().first))
-			node->SetRightChild(inser(data, node->getRightChild(), node));
-		else
-			return node;
-		updateHeight(node);
-		return applyRotation(node);
-	}
+    {
+        if (node == NULL)
+        {
+            node = alloc.allocate(1);
+            alloc.construct(node, data);
+            node->height = 1;
+            node->parent = pa;
+            this->nbrofnodes++;
+            return node;
+        }
+        if (data.first == node->getData().first)
+            return NULL;
+        if (!comp(node->getData().first, data.first)) // operator < 
+            node->SetLeftChild(inser(data, node->getLeftChild(), node));
+        else if (!comp(data.first, node->getData().first))
+            node->SetRightChild(inser(data, node->getRightChild(), node));
+        updateHeight(node);
+        return applyRotation(node);
+    }
 
 	tree_s *del (value_t data, tree_s *node)
 	{

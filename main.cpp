@@ -2654,9 +2654,9 @@ int main()
         // default allocator for ints
         typedef std::allocator<int> alloc;
 		AVLTree<int, int, classcomp, alloc> a;
-		a.insert(ft::pair<char,int>('a',100));
-		a.insert(ft::pair<char,int>('z',200));
-		a.insert(ft::pair<char,int>('d',500));
+		a.insert(ft::pair<int,int>(2,100));
+		a.insert(ft::pair<int,int>(5,200));
+		a.insert(ft::pair<int,int>(8,500));
 		a.traverse();
 		a.printtree(a.root, 0); 
 		a.printTree(a.root, "", true);
