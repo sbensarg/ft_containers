@@ -206,20 +206,6 @@ public:
 		node->SetHeight(maxHeight + 1);
 	}
 
-	// tree_s* insert(T data,tree_s *node)
-	// {
-	// 	if (node == NULL)
-	// 		return new tree(data);
-	// 	if (data < node->getData())
-	// 		node->SetLeftChild(insert(data, node->getLeftChild()));
-	// 	else if (data > node->getData())
-	// 		node->SetRightChild(insert(data, node->getRightChild()));
-	// 	else
-	// 		return node;
-	// 	updateHeight(node);
-	// 	return applyRotation(node);
-	// }
-
 	tree_s* inser(value_t data,tree_s *node, tree_s* pa)
     {
         if (node == NULL)
@@ -241,51 +227,54 @@ public:
         return applyRotation(node);
     }
 
-	tree_s *del (value_t data, tree_s *node)
+	tree_s* erase(tree_s* node, const F &d)
 	{
 		if (node == NULL)
 			return NULL;
-		// keep searching
-		if (data > node->getData())
+		if (comp(node->getData().first, d))  // operator >
+			node->SetRightChild(erase(node->getRightChild(), d));
+		else if (comp(d, node->getData().first))
+			node->SetLeftChild(erase(node->getLeftChild(), d));
+		else
 		{
-			node->SetLeftChild(del(data, node->getLeftChild()));
-		}
-		else if (data < node->getData())
-		{
-			node->SetRightChild(del(data, node->getRightChild()));
-		}
-		else // delete the node we found
-		{
-			// One Child
-			if (node->getLeftChild() == NULL)
+			if (node->getLeftChild() != NULL)
 			{
-				return node->getRightChild();
+				tree_s* cur = node;
+				tree_s* tmp;
+				tmp = mostright(node->getLeftChild());
+				node = alloc.allocate(1);
+				alloc.construct(node, *tmp);
+				node->SetRightChild(cur->getRightChild());
+				node->SetParent(cur->getParent());
+				node->SetLeftChild(erase(cur->getLeftChild(), tmp->getData().first));
+				alloc.destroy(cur);
+				alloc.deallocate(cur, 1);
+
 			}
-			else if (node->getRightChild() == NULL)
+			else if (node->getRightChild() != NULL)
 			{
-				return node->getLeftChild();
+				tree_s* cur = node;
+				tree_s* tmp;
+				tmp = mostleft(node->getRightChild());
+				node = alloc.allocate(1);
+				alloc.construct(node, *tmp);
+				node->SetLeftChild(cur->getLeftChild());
+				node->SetParent(cur->getParent());
+				node->SetRightChild(erase(cur->getRightChild(), tmp->getData().first));
+				alloc.destroy(cur);
+				alloc.deallocate(cur, 1);
 			}
-			// Two Children
-			value_t bla = getMax(node->getLeftChild());
-			node->SetData(bla); // predecessor
-			node->SetLeftChild(del(node->getData(), node->getLeftChild()));
+			else
+			{
+				alloc.destroy(node);
+				alloc.deallocate(node, 1);
+				this->nbrofnodes--;
+                return NULL;
+			}
 		}
 		updateHeight(node);
-		return applyRotation(node);
+        return applyRotation(node);
 	}
-
-	// tree_s* getMax(tree_s *node) {
-    //     if (node->getRightChild() != NULL) {
-    //         return getMax(node->getRightChild());
-    //     }
-    //     return node;
-    // }
-	// tree_s* getMin(tree_s *node) {
-    //     if (node->getLeftChild() != NULL) {
-    //         return getMin(node->getLeftChild());
-    //     }
-    //     return node;
-    // }
 
 	tree_s *mostleft(tree_s *s)
 	{
@@ -310,20 +299,6 @@ public:
 		return root == NULL;
 	}
 	
-	// tree_s* getMax() {
-    //     if (isEmpty()) {	
-    //         return 0;
-    //     }
-    //     return getMax(root);
-    // }
-
-	// value_t getMin() {
-    //     if (isEmpty()) {
-    //         return 0;
-    //     }
-    //     return getMin(root);
-    // }
-
 	void traverse()
 	{
 		traverseInOrder(root);
@@ -335,9 +310,9 @@ public:
 		return this->root;
 	}
 
-	void del(value_t data)
+	void del(F data)
 	{
-		root = del(data, root);
+		root = erase(root, data);
 	}
 
 	// Print the tree
