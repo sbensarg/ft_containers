@@ -2652,26 +2652,27 @@ int main()
 	{
 		//test bst 
         // default allocator for ints
-        typedef std::allocator<int> alloc;
-		AVLTree<int, int, classcomp, alloc> a;
-		a.insert(ft::pair<int,int>(8,8));
-		a.insert(ft::pair<int,int>(5,5));
-		a.insert(ft::pair<int,int>(13,13));
-        a.insert(ft::pair<int,int>(3,3));
-        a.insert(ft::pair<int,int>(2,2));
-        a.insert(ft::pair<int,int>(4,4));
-        a.insert(ft::pair<int,int>(9,9));
-        a.insert(ft::pair<int,int>(21,21));
-        a.insert(ft::pair<int,int>(10,10));
-        a.insert(ft::pair<int,int>(6,6));
-        a.insert(ft::pair<int,int>(7,7));
-		a.traverse();
-		a.printtree(a.root, 0); 
-		a.printTree(a.root, "", true);
-        a.del(5);
-        a.traverse();
-		a.printtree(a.root, 0); 
-		a.printTree(a.root, "", true);
+        // typedef std::allocator<int> alloc;
+		// AVLTree<int, int, classcomp, alloc> a;
+		// a.insert(ft::pair<int,int>(8,8));
+		// a.insert(ft::pair<int,int>(5,5));
+		// a.insert(ft::pair<int,int>(13,13));
+        // a.insert(ft::pair<int,int>(3,3));
+        // a.insert(ft::pair<int,int>(2,2));
+        // a.insert(ft::pair<int,int>(4,4));
+        // a.insert(ft::pair<int,int>(9,9));
+        // a.insert(ft::pair<int,int>(21,21));
+        // a.insert(ft::pair<int,int>(10,10));
+        // a.insert(ft::pair<int,int>(6,6));
+        // a.insert(ft::pair<int,int>(7,7));
+		// a.traverse();
+		// a.printtree(a.root, 0); 
+		// a.printTree(a.root, "", true);
+		// a.clear(a.root);
+       // a.del(5);
+        // a.traverse();
+		// a.printtree(a.root, 0); 
+		// a.printTree(a.root, "", true);
 	}
 	// {
 	// 	std::vector<int> a(70, 70);

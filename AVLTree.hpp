@@ -101,8 +101,8 @@ public:
 		tree_s *ret = this->alloc.allocate(1);
 		this->alloc.construct(ret, tree_s(*c));
 		ret->parent = par;
-		ret->l = copy_tree(c->l, ret);
-		ret->r = copy_tree(c->r, ret);
+		ret->SetLeftChild(copy_tree(c->getLeftChild(), ret));
+		ret->SetRightChild(copy_tree(c->getRightChild(), ret));
 		return (ret);
 	}
 
@@ -206,7 +206,7 @@ public:
 		node->SetHeight(maxHeight + 1);
 	}
 
-	tree_s* inser(value_t data,tree_s *node, tree_s* pa)
+	tree_s* insert(value_t data,tree_s *node, tree_s* pa)
     {
         if (node == NULL)
         {
@@ -220,9 +220,9 @@ public:
         if (data.first == node->getData().first)
             return NULL;
         if (!comp(node->getData().first, data.first)) // operator < 
-            node->SetLeftChild(inser(data, node->getLeftChild(), node));
+            node->SetLeftChild(insert(data, node->getLeftChild(), node));
         else if (!comp(data.first, node->getData().first))
-            node->SetRightChild(inser(data, node->getRightChild(), node));
+            node->SetRightChild(insert(data, node->getRightChild(), node));
         updateHeight(node);
         return applyRotation(node);
     }
@@ -276,6 +276,18 @@ public:
         return applyRotation(node);
 	}
 
+	void clear(tree_s *node)
+	{
+		if (node == NULL)
+			return;
+		clear(node->getLeftChild());
+		clear(node->getRightChild());
+		alloc.destroy(node);
+		alloc.deallocate(node, 1);
+		node = NULL;
+
+	}
+
 	tree_s *mostleft(tree_s *s)
 	{
 		if (s == NULL)
@@ -304,15 +316,20 @@ public:
 		traverseInOrder(root);
 	}
 
-	tree_s *insert(value_t data)
-	{
-		root = inser(data, root, NULL);
-		return this->root;
-	}
+	// tree_s *insert(value_t data)
+	// {
+	// 	root = inser(data, root, NULL);
+	// 	return this->root;
+	// }
 
 	void del(F data)
 	{
 		root = erase(root, data);
+	}
+
+	~AVLTree()
+	{
+		alloc.deallocate(last_elem, 1);
 	}
 
 	// Print the tree
