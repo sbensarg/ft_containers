@@ -124,7 +124,7 @@ private:
       return (end());
     }
 
-    const_iterator ret_it(const key_type& k) const
+    const_iterator ret_iter(const key_type& k) const
     {
       if (base_tree->root != NULL)
       {
@@ -152,9 +152,9 @@ public:
 		key in the map. The pair::second element in the pair 
 		is set to true if a new element was inserted or false 
 		if an equivalent key already existed. */
-      if (ret_it(val.first) == end())
+      if (ret_iter(val.first) == end())
       {
-        base_tree->insert(base_tree->root, val, NULL);
+        base_tree->insert(val);
         _size++;
         return(ft::make_pair(ret_iter(val.first), 1));
       }
@@ -181,49 +181,51 @@ public:
       }
     }
 
-	// iterator begin()
-    // {
-    //   if (this->empty() == true)
-    //     return (iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
-    //   return (iterator(base_tree->root, base_tree->mostleft(base_tree->root), base_tree->last_elem));
-    // }
+	iterator begin()
+    {
+      if (this->empty() == true)
+	  {
+        return (iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
+	  }
+      return (iterator(base_tree->root, base_tree->mostleft(base_tree->root), base_tree->last_elem));
+    }
 
-    // const_iterator begin() const
-    // {
-    //   if (this->empty() == true)
-    //     return (const_iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
-    //   return (const_iterator(base_tree->root, base_tree->mostleft(base_tree->root), base_tree->last_elem));
-    // }
+    const_iterator begin() const
+    {
+      if (this->empty() == true)
+        return (const_iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
+      return (const_iterator(base_tree->root, base_tree->mostleft(base_tree->root), base_tree->last_elem));
+    }
 
-	// iterator end()
-    // {
-    //   return (iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
-    // }
+	iterator end()
+    {
+      return (iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
+    }
 
-    // const_iterator end() const
-    // {
-    //   return (const_iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
-    // }
+    const_iterator end() const
+    {
+      return (const_iterator(base_tree->root, base_tree->last_elem, base_tree->last_elem));
+    }
 
-	// reverse_iterator rbegin()
-    // {
-    //   return (reverse_iterator(end()));
-    // }
+	reverse_iterator rbegin()
+    {
+      return (reverse_iterator(end()));
+    }
 
-    // const_reverse_iterator rbegin() const
-    // {
-    //   return (const_reverse_iterator(end()));
-    // }
+    const_reverse_iterator rbegin() const
+    {
+      return (const_reverse_iterator(end()));
+    }
 
-    // reverse_iterator rend()
-    // {
-    //   return (reverse_iterator(begin()));
-    // }
+    reverse_iterator rend()
+    {
+      return (reverse_iterator(begin()));
+    }
 
-    // const_reverse_iterator rend() const
-    // {
-    //   return (const_reverse_iterator(begin()));
-    // }
+    const_reverse_iterator rend() const
+    {
+      return (const_reverse_iterator(begin()));
+    }
 
 	bool empty() const
     {
@@ -261,9 +263,9 @@ public:
 			return 0;
 		if (this->empty() == true)
 			return 0;
-		if (ret_it(k) == end())
+		if (ret_iter(k) == end())
 			return 0;
-		base_tree->erase(base_tree->root, k);
+		base_tree->del(k);
 		this->_size--;
 		return 1;
     }
@@ -282,7 +284,6 @@ public:
 			this->erase(*it);
 	}
 
-
 	void swap (map& x)
 	{
 		std::swap(_size, x._size);
@@ -293,15 +294,167 @@ public:
 	{
    	   if (empty() == true)
         return ;
-      this->base_tree->clear(base_tree->root);
+      base_tree->root = this->base_tree->clear(base_tree->root);
       this->_size = 0;
     }
 
+	key_compare key_comp() const
+    {
+		//Returns a copy of the comparison object used by the container to compare keys.
+      	return (comp);
+    }
 
+	value_compare value_comp() const
+    {	
+		/*Returns a function object that compares objects of 
+		type std::map::value_type (key-value pairs) by using 
+		key_comp to compare the first components of the pairs.*/
+    	return (value_compare(comp));
+    }
 
+	iterator find (const key_type& k)
+    {
+		/*Searches the container for an element with a key 
+		equivalent to k and returns an iterator to it if found,
+		 otherwise it returns an iterator to map::end.*/
+    	return (ret_iter(k));
+    }
 
+    const_iterator find (const key_type& k) const
+    {
+    	return (ret_iter(k));
+    }
+	size_type count (const key_type& k) const
+    {
+		// Searches the container for elements with a key equivalent to k and returns the number of matches.
+		if (find(k) != end())
+			return 1;
+		return 0;
+    }
 
+	iterator lower_bound(const key_type& k)
+	{
+		/*The function returns an iterator pointing
+		to the key in the map container which is 
+		equivalent to k passed in the parameter.
+		In case k is not present in the map container,
+		the function returns an iterator pointing
+		to the immediate next element which is just greater than k.*/
+		iterator i = begin();
 
+		while  (i != end())
+		{
+			if (!comp(i->first, k))
+				break;
+			i++;
+		}
+		return i;
+	}
+	const_iterator lower_bound (const key_type& k) const
+	{
+		const_iterator i = begin();
 
+		while  (i != end())
+		{
+			if (!comp(i->first, k))
+				break;
+			i++;
+		}
+		return i;
+	}
+
+	iterator upper_bound (const key_type& k)
+	{
+		/*The function returns an iterator pointing to
+		the immediate next element which is just greater than k.*/
+		iterator i = begin();
+
+		while (i != end())
+		{
+			if (comp(k, i->first))
+				break;
+			i++;
+		}
+		return i;  
+	}
+
+	const_iterator upper_bound (const key_type& k) const
+	{
+		const_iterator i = begin();
+
+		while (i != end())
+		{
+			if (comp(k, i->first))
+				break;
+			i++;
+		}
+		return i;  
+	}
+
+	pair<iterator,iterator> equal_range (const key_type& k)
+	{
+		// Returns the bounds of a range that includes all the elements in the container which have a key equivalent to k.
+		return ft::pair<iterator, iterator>(lower_bound(k), upper_bound(k));
+	}
+
+	pair<const_iterator,const_iterator> equal_range (const key_type& k) const
+	{
+		return ft::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
+	}
+
+	allocator_type get_allocator() const
+    {
+      return alloc;
+    }
+
+    ~map()
+	{
+		this->clear();
+	}
 };
 
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator== ( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return (lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+
+  	template <class Key, class T, class Compare, class Alloc>
+	bool operator!= ( const ft::map<Key,T,Compare,Alloc>& lhs,
+						const ft::map<Key,T,Compare,Alloc>& rhs )
+		{
+			return (!(lhs == rhs));
+		}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<  ( const ft::map<Key,T,Compare,Alloc>& lhs,
+						const ft::map<Key,T,Compare,Alloc>& rhs )
+	{
+		return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+	}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator<= ( const ft::map<Key,T,Compare,Alloc>& lhs,
+						const ft::map<Key,T,Compare,Alloc>& rhs )
+		{
+			return !(rhs < lhs);
+		}
+
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>  ( const ft::map<Key,T,Compare,Alloc>& lhs,
+						const ft::map<Key,T,Compare,Alloc>& rhs )
+		{
+			return rhs < lhs;
+		}
+	template <class Key, class T, class Compare, class Alloc>
+	bool operator>= ( const ft::map<Key,T,Compare,Alloc>& lhs,
+						const ft::map<Key,T,Compare,Alloc>& rhs )
+		{
+			return !(lhs < rhs);
+		}
+
+	template <class Key, class T, class Compare, class Alloc>
+	void swap (ft::map<Key,T,Compare,Alloc>& x, ft::map<Key,T,Compare,Alloc>& y)
+	{
+		x.swap(y);
+	}

@@ -18,7 +18,7 @@ public:
 	typedef typename ft::iterator_traits<Iterator>::pointer					pointer;
 	typedef typename ft::iterator_traits<Iterator>::difference_type			difference_type;
 
-	reverse_iterator() : _it(NULL)
+	reverse_iterator() : _it()
 	{
 
 	}

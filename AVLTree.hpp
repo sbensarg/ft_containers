@@ -18,8 +18,8 @@ class Node
 		typedef T		value_t;
         typedef Node<T>	node;
 		Node() : parent(NULL), leftChild(NULL), rightChild(NULL), data(value_t()) {}
-		Node(value_t d) : height(1), data(d), parent(NULL), leftChild(NULL), rightChild(NULL) {}
-		Node (const Node &src) : height(src.height), data(src.data), parent(src.parent), leftChild(src.leftChild), rightChild(src.rightChild) {}  
+		Node(value_t d) : data(d), parent(NULL), leftChild(NULL), rightChild(NULL), height(1) {}
+		Node (const Node &src) : data(src.data), parent(src.parent), leftChild(src.leftChild), rightChild(src.rightChild), height(src.height) {}  
 
 		//getters
 		value_t getData() const {
@@ -172,7 +172,7 @@ public:
         return node != NULL ? height(node->getLeftChild()) - height(node->getRightChild()) : 0;
     }
 
-	tree_s* applyRotation(tree_s *node)
+	tree_s* applyRotation(tree_s *node, int flag)
 	{
 		int balanceFactor = balance(node);
 		if (balanceFactor > 1)
@@ -193,7 +193,11 @@ public:
 			}
 			return rotateLeft(node);
 		}
-		this->last_elem->parent = mostright(this->root);
+		if (flag == 1)
+		{
+			this->last_elem->parent = mostright(this->root);
+			flag = 0;
+		}
 		return node;
 	}
 
@@ -206,7 +210,7 @@ public:
 		node->SetHeight(maxHeight + 1);
 	}
 
-	tree_s* insert(value_t data,tree_s *node, tree_s* pa)
+	tree_s* inser(value_t data,tree_s *node, tree_s* pa)
     {
         if (node == NULL)
         {
@@ -220,11 +224,11 @@ public:
         if (data.first == node->getData().first)
             return NULL;
         if (!comp(node->getData().first, data.first)) // operator < 
-            node->SetLeftChild(insert(data, node->getLeftChild(), node));
+            node->SetLeftChild(inser(data, node->getLeftChild(), node));
         else if (!comp(data.first, node->getData().first))
-            node->SetRightChild(insert(data, node->getRightChild(), node));
+            node->SetRightChild(inser(data, node->getRightChild(), node));
         updateHeight(node);
-        return applyRotation(node);
+        return applyRotation(node, 1);
     }
 
 	tree_s* erase(tree_s* node, const F &d)
@@ -273,19 +277,19 @@ public:
 			}
 		}
 		updateHeight(node);
-        return applyRotation(node);
+        return applyRotation(node, 0);
 	}
 
-	void clear(tree_s *node)
+	tree_s * clear(tree_s *node)
 	{
 		if (node == NULL)
-			return;
-		clear(node->getLeftChild());
-		clear(node->getRightChild());
+			return NULL;
+		node->leftChild = clear(node->leftChild);
+		node->rightChild = clear(node->rightChild);
 		alloc.destroy(node);
 		alloc.deallocate(node, 1);
 		node = NULL;
-
+		return node;
 	}
 
 	tree_s *mostleft(tree_s *s)
@@ -316,11 +320,11 @@ public:
 		traverseInOrder(root);
 	}
 
-	// tree_s *insert(value_t data)
-	// {
-	// 	root = inser(data, root, NULL);
-	// 	return this->root;
-	// }
+	tree_s *insert(value_t data)
+	{
+		root = inser(data, root, NULL);
+		return this->root;
+	}
 
 	void del(F data)
 	{
