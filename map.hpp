@@ -12,12 +12,8 @@ template <	class Key,                                      // map::key_type
 			class T,                                        // map::mapped_type
 			class Compare = std::less<Key>,                 // map::key_compare
 			class Alloc = std::allocator<pair<const Key,T> >// map::allocator_type
-			> class map;
-}
-
-template <class Key, class T, class Compare, class Alloc >
-		
-class ft::map
+			> 	
+class map
 {
 public:
     typedef Key                                                              key_type;
@@ -412,6 +408,7 @@ public:
 		this->clear();
 	}
 };
+}
 
 	template <class Key, class T, class Compare, class Alloc>
 	bool operator== ( const ft::map<Key,T,Compare,Alloc>& lhs, const ft::map<Key,T,Compare,Alloc>& rhs )

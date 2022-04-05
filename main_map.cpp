@@ -1,9 +1,17 @@
 #include <iostream>
-#include "map.hpp"
-#include "pair.hpp"
 #include <string>
 #include <iterator>
 #include <algorithm>
+#include <random>
+
+#include <ctime>
+
+#if MAP == 1 //CREATE A REAL STL EXAMPLE
+	#include <map>
+	namespace ft = std;
+#else
+	#include "map.hpp"
+#endif
 
 #define RED   "\x1B[31m"
 #define GRN   "\x1B[32m"
@@ -20,6 +28,7 @@ struct classcomp {
   bool operator() (const char& lhs, const char& rhs) const
   {return lhs<rhs;}
 };
+
 int main() {
 	{
 		ft::map<int, int> mapOfWordCount;
@@ -294,5 +303,6 @@ int main() {
 		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 	}
+	system("leaks ft_map");
     return 0;
 }

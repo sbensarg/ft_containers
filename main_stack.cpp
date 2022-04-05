@@ -1,5 +1,12 @@
-#include "stack.hpp"
-
+#include <iostream>     // std::cout
+#if STACK == 1 //CREATE A REAL STL EXAMPLE
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+#else
+	#include "stack.hpp"
+	#include "vector.hpp"
+#endif
 
 int main()
 {

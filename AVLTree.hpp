@@ -198,6 +198,13 @@ public:
 			this->last_elem->parent = mostright(this->root);
 			flag = 0;
 		}
+		else
+		{
+			if (node->getLeftChild())
+				node->getLeftChild()->parent = node;
+			if (node->getRightChild())
+				node->getRightChild()->parent = node;
+		}
 		return node;
 	}
 

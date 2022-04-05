@@ -1,15 +1,15 @@
-#include <vector>
-#include <iostream>
-#include "vector.hpp"
-
 #include <iostream>     // std::cout
 #include <iterator>     // std::iterator_traits
 #include <typeinfo>     // typeid
-#include "is_integral.hpp"
-#include "enable_if.hpp"
-#include "lexicographical_compare.hpp"
 #include <iomanip> 
-#include "AVLTree.hpp"
+
+
+#if VEC == 1 //CREATE A REAL STL EXAMPLE
+	#include <vector>
+	namespace ft = std;
+#else
+	#include "vector.hpp"
+#endif
 
 #define RED   "\x1B[31m"
 #define GRN   "\x1B[32m"
@@ -30,11 +30,6 @@ void print_vector(const ft::vector<T>& vector)
 	}
 	std::cout << "-------------------" << std::endl;
 }
-template <unsigned n>
-struct factorial :integral_constant<int,n * factorial<n-1>::value> {};
-
-template <>
-struct factorial<0> : integral_constant<int,1> {};
 
 // 1. the return type (bool) is only valid if T is an integral type:
 template <class T>
@@ -177,9 +172,9 @@ int main()
     ft::vector<std::string> myVector;
     myVector.push_back("chicky");
     myVector.push_back("akira");
-    // myVector.puch_back("www");
-    // myVector.puch_back("rrr");
-    // myVector.puch_back("ggg");
+    myVector.push_back("www");
+    myVector.push_back("rrr");
+    myVector.push_back("ggg");
 
     ft::vector<std::string>::iterator myIt1 = myVector.begin();
     ft::vector<std::string>::iterator myIt2 = myIt1++;
@@ -379,10 +374,7 @@ int main()
 		if ( ft::is_integral<int>::value )
 			std::cout << "int is an integral type" << std::endl;
 	}
-	{
-		 std::cout << factorial<5>::value;  // constexpr (no calculations on runtime)
-	}
-
+	
 	{
 		std::cout <<GRN  "enable_if example: two ways of using enable_if \n"RESET;
 		// enable_if example: two ways of using enable_if
@@ -566,20 +558,19 @@ int main()
 		ft::vector<int>::iterator it;
 
 		it = myvector.begin();
-		std::cout << *it << "\n";
 		it = myvector.insert ( it , 200 );
 
-		 myvector.insert (it + 2, 5,300);
+		myvector.insert (it,2,300);
 
 		// "it" no longer valid, get a new one:
 		it = myvector.begin();
 
-		ft::vector<int> anothervector (4,400);
+		ft::vector<int> anothervector (2,400);
 		myvector.insert (it+2,anothervector.begin(),anothervector.end());
 
 		int myarray [] = { 501,502,503 };
 		myvector.insert (myvector.begin(), myarray, myarray+3);
-		std::cout << *it << "\n";
+
 		std::cout << "myvector contains:";
 		for (it=myvector.begin(); it<myvector.end(); it++)
 			std::cout << ' ' << *it;
@@ -652,8 +643,8 @@ int main()
 
 	{
 		std::cout <<GRN  "vector comparisons\n" RESET;
-		std::vector<int> foo (3,100);   // three ints with a value of 100
-		std::vector<int> bar (2,200);   // two ints with a value of 200
+		ft::vector<int> foo (3,100);   // three ints with a value of 100
+		ft::vector<int> bar (2,200);   // two ints with a value of 200
 
 		if (foo==bar) std::cout << "foo and bar are equal\n";
 		if (foo!=bar) std::cout << "foo and bar are not equal\n";
@@ -709,16 +700,11 @@ int main()
 	}
 
 	{
-		std::vector<int> a(70, 70);
-		a.clear();
-		a.assign(5, 0);
-		std::cout << " c ==> " << a.capacity() << "\n";
-
 		ft::vector<int> b(70, 70);
 		b.clear();
 		b.assign(5, 0);
 		std::cout << "b c ==> " << b.capacity() << "\n";
-
 	}
+	system("leaks ft_vector");
     return 0;
 }

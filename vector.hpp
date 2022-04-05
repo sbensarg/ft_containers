@@ -324,7 +324,7 @@ public:
 		// the new contents are n elements, each initialized to a copy of val.
 		if (this->m_Size < n)
 		{
-			m_Allocator.deallocate(m_Data, m_Capacity * sizeof(value_type));
+			m_Allocator.deallocate(m_Data, m_Capacity);
 			m_Data = m_Allocator.allocate(n);
 			if(m_Capacity < m_Size)
 			{
@@ -356,7 +356,6 @@ public:
 		m_Allocator.construct(&m_Data[index], val);
 		++m_Size;
 		return iterator (m_Data + index);
-		//return (position);
 	}
 
 	void insert (iterator position, size_type n, const value_type& val)
