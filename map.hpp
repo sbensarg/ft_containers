@@ -49,7 +49,6 @@ public:
 		}
 	};
 
-
 private:
     base_type       *base_tree;
     alloc_base       baseallocator;
@@ -94,7 +93,7 @@ public:
 		this->alloc = x.alloc;
 		this->comp = x.comp;
 		this->clear();
-		this->base_tree = baseallocator.allocate(1);
+		baseallocator.destroy(this->base_tree);
 		baseallocator.construct(this->base_tree, *(x.base_tree));
 		this->_size = x._size;
 		return (*this);
@@ -291,6 +290,7 @@ public:
    	   if (empty() == true)
         return ;
       base_tree->root = this->base_tree->clear(base_tree->root);
+	  //erase(begin(), end());
       this->_size = 0;
     }
 
@@ -406,6 +406,8 @@ public:
     ~map()
 	{
 		this->clear();
+		baseallocator.destroy(this->base_tree);
+		baseallocator.deallocate(this->base_tree, 1);
 	}
 };
 }

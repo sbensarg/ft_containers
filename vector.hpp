@@ -65,7 +65,7 @@ public:
 	template <class InputIterator>
     vector (InputIterator first, InputIterator last, 
 		const allocator_type& alloc = allocator_type()
-		, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = nullptr)
+		, typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 		: m_Allocator(alloc)
 	{
 		/*Constructs a container with as many elements as the range [first,last),
@@ -300,23 +300,28 @@ public:
 
 	template <class InputIterator>
 	void assign (InputIterator first, InputIterator last,
-		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = nullptr)
+		typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = NULL)
 	{
 		// the new contents are elements constructed from each of the elements in the range between first and last, in the same order.
-		clear();
-		InputIterator tmp(first);
-		while(tmp != last)
+		size_type n = last - first;
+		if (this->m_Size < n)
 		{
-			tmp++;
-			m_Size++;
+			m_Allocator.deallocate(m_Data, m_Capacity);
+			m_Data = m_Allocator.allocate(n);
+			if(m_Capacity < m_Size)
+			{
+				this->m_Capacity = n;
+			}
 		}
-		m_Capacity = m_Size;
-		m_Data = m_Allocator.allocate(m_Capacity);
+		this->m_Size = n;
+		m_Allocator.destroy(m_Data);
 		for(size_type i = 0; first != last; first++)
 		{
 			m_Allocator.construct(&m_Data[i], *first);
 			i++;
 		}
+		if (m_Capacity < m_Size)
+			m_Capacity = m_Size;
 	}
 	
 	void assign (size_type n, const value_type& val)
@@ -332,6 +337,7 @@ public:
 			}
 		}
 		this->m_Size = n;
+		m_Allocator.destroy(m_Data);
 		for(size_type i = 0; i < m_Size; i++)
 			m_Allocator.construct(&m_Data[i], val);
 		if (m_Capacity < m_Size)

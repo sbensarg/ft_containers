@@ -99,7 +99,7 @@ public:
 		if (c == NULL)
 			return (NULL);
 		tree_s *ret = this->alloc.allocate(1);
-		this->alloc.construct(ret, tree_s(*c));
+		this->alloc.construct(ret, *c);
 		ret->parent = par;
 		ret->SetLeftChild(copy_tree(c->getLeftChild(), ret));
 		ret->SetRightChild(copy_tree(c->getRightChild(), ret));
@@ -172,7 +172,7 @@ public:
         return node != NULL ? height(node->getLeftChild()) - height(node->getRightChild()) : 0;
     }
 
-	tree_s* applyRotation(tree_s *node, int flag)
+	tree_s* applyRotation(tree_s *node)
 	{
 		int balanceFactor = balance(node);
 		if (balanceFactor > 1)
@@ -193,18 +193,12 @@ public:
 			}
 			return rotateLeft(node);
 		}
-		if (flag == 1)
-		{
+		if (node->getLeftChild())
+			node->getLeftChild()->parent = node;
+		if (node->getRightChild())
+			node->getRightChild()->parent = node;
+		if (this->root != NULL)
 			this->last_elem->parent = mostright(this->root);
-			flag = 0;
-		}
-		else
-		{
-			if (node->getLeftChild())
-				node->getLeftChild()->parent = node;
-			if (node->getRightChild())
-				node->getRightChild()->parent = node;
-		}
 		return node;
 	}
 
@@ -235,7 +229,7 @@ public:
         else if (!comp(data.first, node->getData().first))
             node->SetRightChild(inser(data, node->getRightChild(), node));
         updateHeight(node);
-        return applyRotation(node, 1);
+        return applyRotation(node);
     }
 
 	tree_s* erase(tree_s* node, const F &d)
@@ -284,10 +278,10 @@ public:
 			}
 		}
 		updateHeight(node);
-        return applyRotation(node, 0);
+        return applyRotation(node);
 	}
 
-	tree_s * clear(tree_s *node)
+	tree_s *clear(tree_s *node)
 	{
 		if (node == NULL)
 			return NULL;
@@ -345,7 +339,7 @@ public:
 
 	// Print the tree
 	void printTree(tree_s *root, std::string indent, bool last) {
-	if (root != nullptr) {
+	if (root != NULL) {
 		std::cout << indent;
 		if (last) {
 		std::cout << "R----";

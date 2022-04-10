@@ -30,6 +30,7 @@ struct classcomp {
 };
 
 int main() {
+
 	{
 		ft::map<int, int> mapOfWordCount;
 		// Insert Element in map
@@ -184,6 +185,14 @@ int main() {
 
 		std::cout << "mymap now contains " << mymap.size() << " elements.\n";
 	}
+	{
+		ft::map<int, int>test;
+		for (int i = 0; i < 10; i++)
+			test.insert(ft::make_pair(i, i));
+		ft::map<int, int>::iterator bla = test.begin();
+		for (; bla != test.end(); bla++)
+			std::cout << bla->first << "\n";
+	}
 
 	{
 		std::cout <<GRN  "map::insert (C++98)\n" RESET;
@@ -303,6 +312,8 @@ int main() {
 		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 	}
-	system("leaks ft_map");
+	//system("leaks ft_map");
+
     return 0;
 }
+

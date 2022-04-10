@@ -1,5 +1,5 @@
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -std=c++98
 CC = c++
 HEADER = vector.hpp map.hpp stack.hpp
 

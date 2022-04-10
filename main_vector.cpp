@@ -31,21 +31,6 @@ void print_vector(const ft::vector<T>& vector)
 	std::cout << "-------------------" << std::endl;
 }
 
-// 1. the return type (bool) is only valid if T is an integral type:
-template <class T>
-typename ft::enable_if<std::is_integral<T>::value,bool>::type
-  is_odd (T i) {return bool(i%2);}
-
-//a case-insensitive comparison function:
-bool mycomp (char c1, char c2)
-{ return std::tolower(c1)<std::tolower(c2); }
-
-bool fncomp (char lhs, char rhs) {return lhs<rhs;}
-
-struct classcomp {
-  bool operator() (const char& lhs, const char& rhs) const
-  {return lhs<rhs;}
-};
 
 int main()
 {
@@ -60,8 +45,6 @@ int main()
 		vec.pop_back();
 		print_vector(vec);
 		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
-
-
 		vec.push_back("test2");
 		vec.push_back("test3");
 		print_vector(vec);
@@ -78,115 +61,109 @@ int main()
 		print_vector(vec);
 		std::cout << "capacity: " << vec.capacity() << " size: "<< vec.size() <<"\n"; 
 	}
+	{
+		std::cout << "1 ---------------" << "\n";
+		ft::vector<int> vect;
+		vect.push_back(13);
+		vect.push_back(11);
+		vect.push_back(3);
+		std::cout << vect[0] << "\n";
+		std::cout << vect[1] << "\n";
+		std::cout << vect[2] << "\n";
 
-	std::cout <<GRN "test iterator_traits\n"RESET;	
-	//test iterator_traits
-	typedef ft::iterator_traits<int*> my_traits;
-  	if (typeid(my_traits::iterator_category)==typeid(std::random_access_iterator_tag))
-    	std::cout << "int* is My random-access iterator\n";	
+		std::cout << "2 ---------------" << "\n";
+		std::cout <<GRN "test iterator\n"RESET;	
+		//test iterator
 
-	std::cout << "1 ---------------" << "\n";
-    ft::vector<int> vect;
-    vect.push_back(13);
-    vect.push_back(11);
-    vect.push_back(3);
-    std::cout << vect[0] << "\n";
-    std::cout << vect[1] << "\n";
-    std::cout << vect[2] << "\n";
+		ft::vector<int>::iterator it = vect.begin();
 
-    std::cout << "2 ---------------" << "\n";
-	std::cout <<GRN "test iterator\n"RESET;	
-    //test iterator
+		//test dereference
+		std::cout <<GRN "test dereference\n"RESET;	
+		std::cout << *it << "\n";
 
-    ft::vector<int>::iterator it = vect.begin();
+		//test post_increment a++
+		std::cout <<GRN "test post_increment a++\n"RESET;	
+		it++;
 
-    //test dereference
-	std::cout <<GRN "test dereference\n"RESET;	
-    std::cout << *it << "\n";
+		//test dereference
+		std::cout <<GRN "test dereference\n"RESET;	
+		std::cout << *it << "\n";
 
-    //test post_increment a++
-	std::cout <<GRN "test post_increment a++\n"RESET;	
-    it++;
+		it++;
+		std::cout << *it << "\n";
 
-    //test dereference
-	std::cout <<GRN "test dereference\n"RESET;	
-    std::cout << *it << "\n";
+		std::cout << "3 ---------------" << "\n";
+		//create other vector
+		std::cout <<GRN "create other vector\n"RESET;
 
-    it++;
-    std::cout << *it << "\n";
+		ft::vector<int> vect1;
+		vect1.push_back(1);
+		vect1.push_back(-5);
 
-    std::cout << "3 ---------------" << "\n";
-    //create other vector
-	std::cout <<GRN "create other vector\n"RESET;
+		ft::vector<int>::iterator it1 = vect1.begin();
 
-    ft::vector<int> vect1;
-    vect1.push_back(1);
-    vect1.push_back(-5);
+		std::cout << *it1 << "\n";
+		std::cout << *it << "\n";
 
-    ft::vector<int>::iterator it1 = vect1.begin();
+		//test assignement
+		std::cout <<GRN "test assignement vector\n"RESET;
+		it = it1;
+		std::cout << *it << "\n";
 
-    std::cout << *it1 << "\n";
-    std::cout << *it << "\n";
+		it++;
+		std::cout << *it << "\n";
 
-    //test assignement
-	std::cout <<GRN "test assignement vector\n"RESET;
-    it = it1;
-    std::cout << *it << "\n";
+		std::cout << "4 ---------------" << "\n";
 
-    it++;
-    std::cout << *it << "\n";
+		std::cout << *it1 << "\n";
 
-    std::cout << "4 ---------------" << "\n";
+		//test copy constructor
+		std::cout <<GRN "test copy constructor vector\n"RESET;
+		ft::vector<int>::iterator it2(it1);
+		std::cout << *it2 << "\n";
 
-    std::cout << *it1 << "\n";
+		std::cout << "5 ---------------" << "\n";
 
-    //test copy constructor
-	std::cout <<GRN "test copy constructor vector\n"RESET;
-    ft::vector<int>::iterator it2(it1);
-    std::cout << *it2 << "\n";
+		ft::vector<int> vect2;
+		vect2.push_back(100);
+		vect2.push_back(200);
+		vect2.push_back(300);
 
-    std::cout << "5 ---------------" << "\n";
+		ft::vector<int>::iterator it3 = vect2.begin();
 
-    ft::vector<int> vect2;
-    vect2.push_back(100);
-    vect2.push_back(200);
-    vect2.push_back(300);
+		int a = 3;
+		a = *it3++;
 
-    ft::vector<int>::iterator it3 = vect2.begin();
+		std::cout << "a : " << a << "\n";
+		std::cout << "a : " << *it3 << "\n";
 
-    int a = 3;
-    a = *it3++;
+		std::cout << "6 ---------------" << "\n";
+		std::cout <<GRN "test pre-increment ++a\n"RESET;
+		//test pre-increment ++a
 
-    std::cout << "a : " << a << "\n";
-    std::cout << "a : " << *it3 << "\n";
+		++it3;
+		std::cout << *it3 << "\n";
 
-    std::cout << "6 ---------------" << "\n";
-	std::cout <<GRN "test pre-increment ++a\n"RESET;
-    //test pre-increment ++a
+		std::cout << "7 ---------------" << "\n";
 
-    ++it3;
-    std::cout << *it3 << "\n";
+		ft::vector<std::string> myVector;
+		myVector.push_back("chicky");
+		myVector.push_back("akira");
+		myVector.push_back("www");
+		myVector.push_back("rrr");
+		myVector.push_back("ggg");
 
-    std::cout << "7 ---------------" << "\n";
+		ft::vector<std::string>::iterator myIt1 = myVector.begin();
+		ft::vector<std::string>::iterator myIt2 = myIt1++;
 
-    ft::vector<std::string> myVector;
-    myVector.push_back("chicky");
-    myVector.push_back("akira");
-    myVector.push_back("www");
-    myVector.push_back("rrr");
-    myVector.push_back("ggg");
+		std::cout <<  "myIt1 :" << *myIt1 << "\n";
+		std::cout << "myIt2 :"  << *myIt2 << "\n";
 
-    ft::vector<std::string>::iterator myIt1 = myVector.begin();
-    ft::vector<std::string>::iterator myIt2 = myIt1++;
+		ft::vector<std::string>::iterator myIt3 = ++myIt1;
 
-    std::cout <<  "myIt1 :" << *myIt1 << "\n";
-    std::cout << "myIt2 :"  << *myIt2 << "\n";
-
-    ft::vector<std::string>::iterator myIt3 = ++myIt1;
-
-    std::cout <<  "myIt1 :" << *myIt1 << "\n";
-    std::cout << "myIt3 :"  << *myIt3 << "\n";
-
+		std::cout <<  "myIt1 :" << *myIt1 << "\n";
+		std::cout << "myIt3 :"  << *myIt3 << "\n";
+	}
 	std::cout << "8 ---------------" << "\n";
 	{
 		ft::vector<int> vect;
@@ -267,124 +244,6 @@ int main()
 	}
 
 	{
-		//test base iterator
-		std::cout <<GRN "test base iterator" << std::endl << RESET;
-		ft::vector<int> myvector;
-		myvector.push_back(43);
-		myvector.push_back(55);
-		myvector.push_back(6);
-		print_vector(myvector);
-
-		typedef ft::vector<int>::iterator iter_type;
-
-		std::reverse_iterator<iter_type> rev_end (myvector.begin());
-		std::reverse_iterator<iter_type> rev_begin (myvector.end());
-
-		std::cout << "myvector:";
-		for (iter_type it = rev_end.base(); it != rev_begin.base(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	}
-
-	{
-		// test operator +
-		std::cout << GRN "test operator +" << std::endl << RESET;
-		ft::vector<int> myvector;
-		myvector.push_back(43);
-		myvector.push_back(55);
-		myvector.push_back(6);
-		myvector.push_back(77);
-		myvector.push_back(32);
-		print_vector(myvector);
-
-		typedef ft::vector<int>::iterator iter_type;
-		
-		ft::reverse_iterator<iter_type> rev_it;
-		
-		rev_it = myvector.rbegin() +3;
-
-  		std::cout << "The fourth element from the end is: " << *rev_it << '\n';
-		// test operator ++
-		iter_type from (myvector.begin());                     //   ^
-                                                         //         ------>
-		iter_type until (myvector.end()); 
-		ft::reverse_iterator<iter_type> rev_until (from);     // ^
-                                                         //         <------
-		ft::reverse_iterator<iter_type> rev_from (until); 
-		while (rev_from != rev_until)
-		{
-    		std::cout << ' ' << *rev_from;
-			++rev_from;
-		}
-		std::cout << "\n";
-		// reverse_iterator::operator+= example
-		ft::reverse_iterator<iter_type> rev_iterator = myvector.rbegin();
-
-		rev_iterator += 2;
-
-  		std::cout << "The third element from the end is: " << *rev_iterator << '\n';
-		// reverse_iterator::operator- example
-		rev_iterator = myvector.rend() - 3;
-
-  		std::cout << "myvector.rend()-3 points to: " << *rev_iterator << '\n';
-	}
-
-	{
-		// reverse_iterator::operator-- example
-		std::cout << GRN "reverse_iterator::operator-- example\n"RESET;
-		ft::vector<int> myvector;
-		myvector.push_back(11);
-		myvector.push_back(12);
-		myvector.push_back(13);
-		myvector.push_back(14);
-		myvector.push_back(15);
-
-		typedef ft::vector<int>::iterator iter_type;
-
-		ft::reverse_iterator<iter_type> rev_begin (myvector.end());
-		ft::reverse_iterator<iter_type> rev_end (myvector.begin());
-
-		ft::reverse_iterator<iter_type> rev_iterator = rev_begin;
-		while ( rev_iterator != rev_end )
-			std::cout << *rev_iterator++ << ' ';
-		std::cout << '\n';
-
-		while ( rev_iterator != rev_begin )
-			std::cout << *(--rev_iterator) << ' ';
-		std::cout << '\n';
-		//test operator -=
-		ft::reverse_iterator<iter_type> rev_iterator1 = myvector.rend();
-		
-		rev_iterator1 -= 2;
-
-  		std::cout << "rev_iterator now points to: " << *rev_iterator1 << '\n';
-		
-		// reverse_iterator::operator[] example
-		std::cout << "The fourth element from the end is: " << rev_iterator[1] << '\n';
-	}
-	//integral_constant::operator value_type example
-
-	{
-		// is_integral<T> inherits from integral_constant
-		std::cout <<GRN  "is_integral<T> inherits from integral_constant \n"RESET;
-		if ( ft::is_integral<int>() )
-			std::cout << "int is an integral type" << std::endl;
-
-		// same result as:
-		if ( ft::is_integral<int>::value )
-			std::cout << "int is an integral type" << std::endl;
-	}
-	
-	{
-		std::cout <<GRN  "enable_if example: two ways of using enable_if \n"RESET;
-		// enable_if example: two ways of using enable_if
-		short int i = 1;    // code does not compile if type of i is not integral
-
-		std::cout << std::boolalpha;
-		std::cout << "i is odd: " << is_odd(i) << std::endl;
-	}
-
-	{
 		std::cout <<GRN  "test Constructs a container with as many elements as the range \n"RESET;
 		//test Constructs a container with as many elements as the range 
 		ft::vector<int> second (4,300);                       // four ints with value 100
@@ -426,39 +285,6 @@ int main()
 
 	}
 
-	{
-		std::cout <<GRN  "vector::reserve\n"RESET;
-		ft::vector<int>::size_type sz;
-
-		ft::vector<int> foo;
-		sz = foo.capacity();
-		std::cout << "making foo grow:\n";
-		for (int i=0; i<100; ++i) {
-			foo.push_back(i);
-			if (sz!=foo.capacity()) {
-			sz = foo.capacity();
-			std::cout << "capacity changed: " << sz << '\n';
-			}
-		}
-		 try {
-			// vector throws a length_error if resized above max_size
-				ft::vector<int> bar;
-				sz = bar.capacity();
-				bar.reserve(4611686018427387906);   // this is the only difference with foo above
-				std::cout << "making bar grow:\n";
-				for (int i=0; i<100; ++i) {
-					bar.push_back(i);
-					if (sz!=bar.capacity()) {
-					sz = bar.capacity();
-					std::cout << "capacity changed: " << sz << '\n';
-					}
-				}
-  			}		
-  		catch (const std::length_error& le) {
-	  		std::cerr << "Length error: " << le.what() << '\n';
-  		}
-		
-	}
 
 	{
 		std::cout <<GRN  "test vector::empty\n"RESET;
@@ -586,10 +412,7 @@ int main()
 		for (int i=1; i<=10; i++) myvector.push_back(i);
 
 		// erase the 6th element
-	//	myvector.erase (myvector.begin()+5);
 
-
-		
 		it = myvector.erase (myvector.begin()+5);
 		std::cout << "iterator pointing to the new location " << *it << "\n";
 		 // erase the first 3 elements:
@@ -619,92 +442,7 @@ int main()
 			std::cout << ' ' << bar[i];
 		std::cout << '\n';
 	}
-
-	{
-		std::cout << GRN "vector::get_allocator\n" RESET;
-		ft::vector<int> myvector;
-		int * p;
-		unsigned int i;
-
-		// allocate an array with space for 5 elements using vector's allocator:
-		p = myvector.get_allocator().allocate(5);
-
-		// construct values in-place on the array:
-		for (i=0; i<5; i++) myvector.get_allocator().construct(&p[i],i);
-
-		std::cout << "The allocated array contains:";
-		for (i=0; i<5; i++) std::cout << ' ' << p[i];
-		std::cout << '\n';
-
-		// destroy and deallocate:
-		for (i=0; i<5; i++) myvector.get_allocator().destroy(&p[i]);
-		myvector.get_allocator().deallocate(p,5);
-	}
-
-	{
-		std::cout <<GRN  "vector comparisons\n" RESET;
-		ft::vector<int> foo (3,100);   // three ints with a value of 100
-		ft::vector<int> bar (2,200);   // two ints with a value of 200
-
-		if (foo==bar) std::cout << "foo and bar are equal\n";
-		if (foo!=bar) std::cout << "foo and bar are not equal\n";
-		if (foo< bar) std::cout << "foo is less than bar\n";
-		if (foo> bar) std::cout << "foo is greater than bar\n";
-		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
-		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
-	}
-
-	{
-		ft::vector<int> myvector;
-		for (int i=0; i<10; i++) myvector.push_back(i);	// myvector: 0 1 2 3 4 5 6 7 8 9
-
-		typedef ft::vector<int>::iterator iter_type;
-
-		ft::reverse_iterator<iter_type> rev_it;
-
-		std::cout <<  *myvector.rbegin() << "\n";
-		rev_it = 3 + myvector.rbegin();
-
-		std::cout << "The fourth element from the end is: " << *rev_it << '\n';
-	}
-
-	{
-		ft::vector<int> myvector;
-		for (int i=0; i<10; i++) myvector.push_back(i);
-
-		ft::reverse_iterator<ft::vector<int>::iterator> from,until;
-
-		from = myvector.rbegin();
-		until = myvector.rend();
-
-		std::cout << "myvector has " << (until-from) << " elements.\n";
-	}
-
-	{
-		std::cout << GRN "lexicographical_compare test\n" RESET;
-
-		char foo[]="Apple";
-		char bar[]="apartment";
-
-		std::cout << std::boolalpha;
-
-		std::cout << "Comparing foo and bar lexicographically (foo<bar):\n";
-
-		std::cout << "Using default comparison (operator<): ";
-		std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9);
-		std::cout << '\n';
-
-		std::cout << "Using mycomp as comparison object: ";
-		std::cout << ft::lexicographical_compare(foo,foo+5,bar,bar+9,mycomp);
-		std::cout << '\n';
-	}
-
-	{
-		ft::vector<int> b(70, 70);
-		b.clear();
-		b.assign(5, 0);
-		std::cout << "b c ==> " << b.capacity() << "\n";
-	}
-	system("leaks ft_vector");
+	
+	//system("leaks ft_vector");
     return 0;
 }
